@@ -7,19 +7,21 @@ function App() {
   const [tweet, setTweet] = useState({ text: "", user: "", likes: "", id: "" });
 
   useEffect(() => {
-    firestore
+    const cancelarSuscripcion = firestore
       .collection("tweets")
-      .get()
-      .then((snapshot) => {
-        const tweet = snapshot.docs.map((doc) => {
+      .onSnapshot((snapshot) => {
+        const tweets = snapshot.docs.map((doc) => {
           return {
             text: doc.data().tweetText,
             user: doc.data().user,
+            likes: doc.data().likes,
             id: doc.id,
           };
         });
-        setTweets(tweet);
+        setTweets(tweets);
       });
+
+    return () => cancelarSuscripcion();
   }, []);
 
   const handleChange = (e) => {
@@ -29,34 +31,16 @@ function App() {
 
   const sendTweet = (e) => {
     e.preventDefault();
-
-    let enviarTweet = firestore.collection("tweets").add(tweet);
-
-    let solicitarDocumento = enviarTweet.then((docRef) => {
-      return docRef.get();
-    });
-
-    solicitarDocumento.then((doc) => {
-      let nuevoTweet = {
-        tweet: doc.data().tweet,
-        user: doc.data().user,
-        id: doc.id,
-      };
-      setTweets([nuevoTweet, ...tweets]);
-    });
+    firestore.collection("tweets").add(tweet);
   };
 
   const deleteTweet = (id) => {
-    const nuevosTweets = tweets.filter((tweet) => {
-      return tweet.id !== id;
-    });
-
-    setTweets(nuevosTweets);
-
     firestore.doc(`tweets/${id}`).delete();
-
   };
 
+  const likeTweet = (id, likes) => {
+    firestore.doc(`tweets/${id}`).update({ likes: likes + 1 });
+  };
 
   return (
     <div className="App">
@@ -93,6 +77,7 @@ function App() {
               <p>{tweet.likes}</p>
               <img
                 src={corazon}
+                onClick={() => likeTweet(tweet.id, tweet.likes)}
                 className="like-icon"
                 alt=""
               />
