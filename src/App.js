@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
-import { firestore } from "./firebase";
+import { firestore, auth, loginWithGoogle, logout } from "./firebase";
 import corazon from "./imgs/corazon.svg";
+import deleteIcon from "./imgs/deleteIcon.svg";
 
 function App() {
   const [tweets, setTweets] = useState([]);
-  const [tweet, setTweet] = useState({ text: "", user: "", likes: "", id: "" });
+  const [tweet, setTweet] = useState({ tweetText: "", user: ""});
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const cancelarSuscripcion = firestore
+    const unsubscribe = firestore
       .collection("tweets")
       .onSnapshot((snapshot) => {
         const tweets = snapshot.docs.map((doc) => {
           return {
-            text: doc.data().tweetText,
+            tweetText: doc.data().tweetText,
             user: doc.data().user,
             likes: doc.data().likes,
             id: doc.id,
@@ -21,7 +23,12 @@ function App() {
         setTweets(tweets);
       });
 
-    return () => cancelarSuscripcion();
+    auth.onAuthStateChanged((user) => {
+      setUser(user);
+      console.log(user);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const handleChange = (e) => {
@@ -38,53 +45,73 @@ function App() {
     firestore.doc(`tweets/${id}`).delete();
   };
 
-  const likeTweet = (id, likes) => {
+  const likeTweet = (id, likes=0) => {
+    console.log(id);
+    console.log(likes);
     firestore.doc(`tweets/${id}`).update({ likes: likes + 1 });
   };
 
   return (
     <div className="App">
-      <h1>FireBase</h1>
-      <h2>Tweets</h2>
-      <div className="App-form">
-        <textarea
-          placeholder="text tweet"
-          onChange={handleChange}
-          name="tweetText"
-          rows="4"
-          cols="50"
-        ></textarea>
-        <div className="autor-button">
-          <input
-            placeholder="autor tweet"
-            className="item-form"
-            onChange={handleChange}
-            name="user"
-            type="text"
-          />
-          <button className="item-form" onClick={sendTweet}>
-            Enviar
-          </button>
+      {user ? (
+        <div className="user-profile">
+          <img className="user-profile-pic" src={user.photoURL} alt="" />
+          <p>¡Hola {user.displayName}!</p>
+          <button onClick={logout}>Log out</button>
         </div>
-      </div>
-      <div className="tweetContainer">
+      ) : (
+        <button className="login-btn" onClick={loginWithGoogle}>
+          Login con Google
+        </button>
+      )}
+      <form className="App-form-container">
+        <div className="form-container">
+          <textarea
+            placeholder="escribe un tweet..."
+            className="tweet-text"
+            onChange={handleChange}
+            name="tweetText"
+            rows="4"
+            cols="50"
+          ></textarea>
+          <div className="autor-buttons">
+            <input
+              placeholder="autor"
+              className="item-form"
+              onChange={handleChange}
+              name="user"
+              type="text"
+            />
+            <button className="send-tweet" onClick={sendTweet}>
+              Enviar tweet
+            </button>
+          </div>
+        </div>
+      </form>
+      <div className="tweet-container">
         {tweets.map((tweet) => (
           <div key={tweet.id} className="tweet">
-            <p key={tweet.id} id={tweet.id}>
-              tweet: {tweet.text} - autor: {tweet.user}
-            </p>
-            <div className="likes-container">
-              <p>{tweet.likes}</p>
-              <img
-                src={corazon}
-                onClick={() => likeTweet(tweet.id, tweet.likes)}
-                className="like-icon"
-                alt=""
-              />
+            <div className="autor-container">
+              <p className="font-style-tweet">{tweet.tweetText}</p>
+              <p className="">por: {tweet.user}</p>
             </div>
-            <span className="delete" onClick={() => deleteTweet(tweet.id)}>
-              borrar
-            </span>
+            <div className="buttons-tweets-container">
+              <img
+                  src={deleteIcon}
+                  onClick={() => deleteTweet(tweet.id)}
+                  className="delete-icon like-item"
+                  alt="Borrar Tweet"
+                />
+              <div className="likes-container">
+                <img
+                  src={corazon}
+                  onClick={() => likeTweet(tweet.id, tweet.likes)}
+                  className="like-icon like-item"
+                  alt=""
+                />
+                <p className="like-item">{tweet.likes || 0}</p>
+              </div>
+            </div>
           </div>
         ))}
       </div>
