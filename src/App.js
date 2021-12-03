@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { firestore, auth, loginWithGoogle, logout } from "./firebase";
-import corazon from "./imgs/corazon.svg";
-import deleteIcon from "./imgs/deleteIcon.svg";
+
+const images = require.context('./imgs', true);
 
 function App() {
   const [tweets, setTweets] = useState([]);
@@ -29,7 +29,7 @@ function App() {
     });
 
     return () => unsubscribe();
-  }, []);
+  },);
 
   const handleChange = (e) => {
     let nuevoTweet = { ...tweet, [e.target.name]: e.target.value };
@@ -97,14 +97,14 @@ function App() {
             </div>
             <div className="buttons-tweets-container">
               <img
-                  src={deleteIcon}
+                  src={images('./deleteIcon.svg').default}
                   onClick={() => deleteTweet(tweet.id)}
                   className="delete-icon like-item"
                   alt="Borrar Tweet"
                 />
               <div className="likes-container">
                 <img
-                  src={corazon}
+                  src={images('./corazon.svg').default}
                   onClick={() => likeTweet(tweet.id, tweet.likes)}
                   className="like-icon like-item"
                   alt=""
