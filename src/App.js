@@ -5,11 +5,7 @@ const images = require.context("./imgs", true);
 
 function App() {
   const [tweets, setTweets] = useState([]);
-  const [favTweets, setFavTweets] = useState({
-    fav: "",
-    userId: "",
-    docId: "",
-  });
+  const [favTweets, setFavTweets] = useState([]);
   const [tweet, setTweet] = useState({
     tweet: "",
     autor: "",
@@ -51,12 +47,7 @@ function App() {
 
       tweetsFav.get().then((doc) => {
         if (!doc.exists) return;
-        const favTweets = {
-          fav: doc.data().favTweets,
-          userId: doc.data().userId,
-          docId: doc.id,
-        };
-        setFavTweets(favTweets);
+        setFavTweets(doc.data().fav);
       });
     }
   }, [user]);
@@ -82,34 +73,32 @@ function App() {
   };
 
   const likeTweet = (tweetId, likes = 0) => {
-    const { fav, userId } = favTweets;
-    
-    const newFavTweets = [...fav, tweetId];
+    setUser(user);
+
+    const newFavTweets = [...favTweets, tweetId];
     const objFavTweet = {
       fav: newFavTweets,
-      userId,
     };
-    console.log(fav);
-    if (fav.length) {
-      const alreadyLike = fav.includes(tweetId);
+    console.log(favTweets);
+    if (favTweets.length) {
+      const alreadyLike = favTweets.includes(tweetId);
       if (alreadyLike) {
-        const favFilter = fav.filter((item) => item !== tweetId);
+        const favFilter = favTweets.filter((item) => item !== tweetId);
         firestore.doc(`tweets/${tweetId}`).update({ likes: likes - 1 });
-        firestore.doc(`users/${user.email}`).update({ favTweets: favFilter });
+        firestore.doc(`users/${user.email}`).update({ fav: favFilter });
+        setFavTweets(favFilter);
       } else {
         console.log(tweetId);
         firestore.doc(`tweets/${tweetId}`).update({ likes: likes + 1 });
-        firestore
-          .doc(`users/${user.email}`)
-          .update({ favTweets: newFavTweets });
+        firestore.doc(`users/${user.email}`).update({ fav: newFavTweets });
+        setFavTweets(newFavTweets);
       }
     } else {
       firestore.doc(`tweets/${tweetId}`).update({ likes: likes + 1 });
       firestore.collection("users").doc(user.email).set(objFavTweet);
+      setFavTweets(newFavTweets);
     }
   };
-
-  //actualizar en tiempo real registro de tweets fav o actualizar el estado de los nuevos favoritos
 
   return (
     <div className="App">
