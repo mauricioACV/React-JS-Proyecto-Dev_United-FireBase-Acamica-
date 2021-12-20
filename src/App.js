@@ -5,8 +5,9 @@ const images = require.context("./imgs", true);
 
 function App() {
   const [tweets, setTweets] = useState([]);
-  const [fTweets, setFavTweets] = useState({
+  const [favTweets, setFavTweets] = useState({
     fav: "",
+    userId: "",
     docId: "",
   });
   const [tweet, setTweet] = useState({
@@ -18,56 +19,47 @@ function App() {
   const [user, setUser] = useState(null);
 
   console.log(tweets);
-  console.log(fTweets);
+  console.log(favTweets);
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       setUser(user);
     });
-    if(user) {
-      const unsubscribe = firestore
-      .collection("tweets")
-      .onSnapshot((snapshot) => {
-        const tweets = snapshot.docs.map((doc) => {
-          return {
-            tweet: doc.data().tweet,
-            autor: doc.data().autor,
-            id: doc.id,
-            likes: doc.data().likes,
-            email: doc.data().email,
-            uid: doc.data().uid,
-          };
-        })
-        setTweets(tweets);
-      });
-    return () => unsubscribe();
-    }
-  }, [user]);
-
-  useEffect(() => {
     if (user) {
       const unsubscribe = firestore
-        .collection("users")
+        .collection("tweets")
         .onSnapshot((snapshot) => {
-          const favTw = snapshot.docs.map((doc) => {
-            if (doc.data().userId === user.uid) {
-              return {
-                fav: [doc.data().favTweets[0]],
-                docId: doc.id,
-              } 
-                
-            } else {
-              return null;
-            }
+          const tweets = snapshot.docs.map((doc) => {
+            return {
+              tweet: doc.data().tweet,
+              autor: doc.data().autor,
+              id: doc.id,
+              likes: doc.data().likes,
+              email: doc.data().email,
+              uid: doc.data().uid,
+            };
           });
-          setFavTweets(favTw);
+          setTweets(tweets);
         });
       return () => unsubscribe();
     }
   }, [user]);
 
+  useEffect(() => {
+    if (user) {
+      const tweetsFav = firestore.collection("users").doc(user.email);
 
-
+      tweetsFav.get().then((doc) => {
+        if (!doc.exists) return;
+        const favTweets = {
+          fav: doc.data().favTweets,
+          userId: doc.data().userId,
+          docId: doc.id,
+        };
+        setFavTweets(favTweets);
+      });
+    }
+  }, [user]);
 
   const handleChange = (e) => {
     let nuevoTweet = {
@@ -81,7 +73,7 @@ function App() {
 
   const sendTweet = (e) => {
     e.preventDefault();
-    console.log(tweet)
+    console.log(tweet);
     firestore.collection("tweets").add(tweet);
   };
 
@@ -89,16 +81,35 @@ function App() {
     firestore.doc(`tweets/${id}`).delete();
   };
 
-  const likeTweet = (id, likes = 0) => {
-    console.log(id);
-    console.log(likes);
-    firestore.doc(`tweets/${id}`).update({ likes: likes + 1 });
-
-    console.log(fTweets[0].fav)
-    const newFav = [...fTweets[0].fav, id];
-    console.log(newFav)
-    firestore.doc(`users/${fTweets[0].docId}`).update({ favTweets: newFav });
+  const likeTweet = (tweetId, likes = 0) => {
+    const { fav, userId } = favTweets;
+    
+    const newFavTweets = [...fav, tweetId];
+    const objFavTweet = {
+      fav: newFavTweets,
+      userId,
+    };
+    console.log(fav);
+    if (fav.length) {
+      const alreadyLike = fav.includes(tweetId);
+      if (alreadyLike) {
+        const favFilter = fav.filter((item) => item !== tweetId);
+        firestore.doc(`tweets/${tweetId}`).update({ likes: likes - 1 });
+        firestore.doc(`users/${user.email}`).update({ favTweets: favFilter });
+      } else {
+        console.log(tweetId);
+        firestore.doc(`tweets/${tweetId}`).update({ likes: likes + 1 });
+        firestore
+          .doc(`users/${user.email}`)
+          .update({ favTweets: newFavTweets });
+      }
+    } else {
+      firestore.doc(`tweets/${tweetId}`).update({ likes: likes + 1 });
+      firestore.collection("users").doc(user.email).set(objFavTweet);
+    }
   };
+
+  //actualizar en tiempo real registro de tweets fav o actualizar el estado de los nuevos favoritos
 
   return (
     <div className="App">
@@ -131,32 +142,35 @@ function App() {
         </div>
       </form>
       <div className="tweet-container">
-        {user && tweets.map((tweet) => (
-          <div key={tweet.id} className="tweet">
-            <div className="autor-container">
-              <p className="font-style-tweet">{tweet.tweet}</p>
-              <p className="">por: {tweet.autor}</p>
-              <p className="">{tweet.email}</p>
-            </div>
-            <div className="buttons-tweets-container">
-              {user && user.uid === tweet.uid && <img
-                src={images("./deleteIcon.svg").default}
-                onClick={() => deleteTweet(tweet.id)}
-                className="delete-icon like-item"
-                alt="Borrar Tweet"
-              />}
-              <div className="likes-container">
-                <img
-                  src={images("./corazon.svg").default}
-                  onClick={() => likeTweet(tweet.id, tweet.likes)}
-                  className="like-icon like-item"
-                  alt=""
-                />
-                <p className="like-item">{tweet.likes || 0}</p>
+        {user &&
+          tweets.map((tweet) => (
+            <div key={tweet.id} className="tweet">
+              <div className="autor-container">
+                <p className="font-style-tweet">{tweet.tweet}</p>
+                <p className="">por: {tweet.autor}</p>
+                <p className="">{tweet.email}</p>
+              </div>
+              <div className="buttons-tweets-container">
+                {user && user.uid === tweet.uid && (
+                  <img
+                    src={images("./deleteIcon.svg").default}
+                    onClick={() => deleteTweet(tweet.id)}
+                    className="delete-icon like-item"
+                    alt="Borrar Tweet"
+                  />
+                )}
+                <div className="likes-container">
+                  <img
+                    src={images("./corazon.svg").default}
+                    onClick={() => likeTweet(tweet.id, tweet.likes)}
+                    className="like-icon like-item"
+                    alt=""
+                  />
+                  <p className="like-item">{tweet.likes || 0}</p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );
