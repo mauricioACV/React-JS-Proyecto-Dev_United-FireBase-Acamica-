@@ -28,16 +28,17 @@ export default function FormNewTweet({ user }) {
     <form className="App-form-container">
       <div className="form-container">
         <textarea
-          placeholder="escribe un tweet..."
           className="tweet-text"
+          placeholder="What’s happening?"
           onChange={handleChange}
           name="tweet"
           rows="4"
           cols="50"
         ></textarea>
-        <div className="autor-buttons">
+        <div className="autor-button">
+          <p className="max-char">200 max.</p>
           <button className="send-tweet" onClick={sendTweet}>
-            Enviar tweet
+            Post
           </button>
         </div>
       </div>

@@ -1,5 +1,10 @@
    
-/* @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap"); */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Roboto:wght@100;300;400;500;700&display=swap');
+@font-face {
+  font-family: Silkscreen;
+  src: url('./Fonts/silkscreen/slkscr.ttf'), url('./Fonts/silkscreen/slkscrb.ttf'),
+  url('./Fonts/silkscreen/slkscre.ttf'), url('./Fonts/silkscreen/slkscreb.ttf');
+}
 
 * {
   padding: 0;
@@ -9,14 +14,80 @@
 }
 
 body {
-  margin: 20px;
-  background-color: #edf2f6;
+  font-family: Fira Code;
+  background-color: #2E132C;
+  color: #fff;
 }
 
 .App {
+  /* display: flex;
+  flex-direction: column;
+  align-items: center; */
+}
+
+.dev-united-app {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.front-page-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.logo-container, .login-container {
+  width: 50%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container_info {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-title {
+  font-family: Silkscreen;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 50px;
+  line-height: 50px;
+  letter-spacing: -0.333333px;
+  }
+
+.login-subtitle {
+  margin: 30px 0px 40px 0px;
+  font-family: Fira Code;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 31px;
+  letter-spacing: -0.333333px;
+}
+
+.login-google {
+  cursor: pointer;
+  width: 100%;
+}
+
+.login-footer {
+  margin-top: 100px;
+  display: flex;
+  justify-content: center;
+}
+
+.login-copyright {
+  color: #60265B;
+}
+
+.login-version-app {
+  color: #F50D5A;
 }
 
 .login-btn {
@@ -27,39 +98,85 @@ body {
   padding: 5px;
 }
 
+.App-form-container {
+  width: 100%;
+  background: #150714;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .form-container {
+  width: 50%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .tweet-text {
-  width: 95%;
+  margin-top: 20px;
+  background: #2F112D;
+  color: #2F112D;
+  width: 60%;
+  height: 113px;
   padding: 5px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 26px;
+  letter-spacing: -0.333333px;
 }
 
-.autor-buttons{
-  width: 95%;
-  padding: 10px;
+.autor-button{
+  width: 60%;
+  padding: 10px 0px;
   display: flex;
-  justify-content: space-evenly;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.max-char {
+  color: #F50D5A;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 21px;
+  text-align: right;
+  letter-spacing: -0.333333px;
+  margin-bottom: 5px;
+}
+
+.tweets-app {
+  margin-top: 30px;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .tweet-container{
-  width: 100%;
+  width: 60%;
   padding: 0px 5px;
+  display: flex;
 }
 
 .send-tweet {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 3px;
-  width: 30%;
-  height: 25px;
-  margin: 0px 1px;
-  font-size: .7rem;
+  cursor: pointer;
+  background: #2F112D;
+  border: none;
+  color: #150714;
+  width: 102px;
+  height: 35px;
+  font-family: Silkscreen;
+  font-style: normal;
   font-weight: bold;
+  font-size: 20px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: -0.333333px;
 }
 
 .item-form{
@@ -73,9 +190,8 @@ body {
   margin: 8px 0px;
   padding: 8px 10px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: white;
+  flex-direction: column;
+  background-color: #2E132C;
   border-radius: 5px;
   max-width: 550px;
   margin: 15px auto;
@@ -109,7 +225,6 @@ body {
 
 .likes-container {
   border-radius: 5px;
-  border: 1px solid red;
   padding: 5px;
   margin: 0px 5px;
   display: flex;
