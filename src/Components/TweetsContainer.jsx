@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { firestore } from "../firebase";
 
-export default function TweetsContainer({ user }) {
+export default function TweetsContainer({ user, favTweets, setFavTweets }) {
   const images = require.context("../imgs", true);
 
-  const [favTweets, setFavTweets] = useState([]);
   const [tweets, setTweets] = useState([]);
+
+  console.log(favTweets);
 
   useEffect(() => {
     if (user) {
@@ -61,6 +62,7 @@ export default function TweetsContainer({ user }) {
         setFavTweets(newFavTweets);
       }
     } else {
+      console.log("entro aquí");
       firestore.doc(`tweets/${tweetId}`).update({ likes: likes + 1 });
       firestore.collection("users").doc(user.email).set(objFavTweet);
       setFavTweets(newFavTweets);

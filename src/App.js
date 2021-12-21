@@ -4,12 +4,13 @@ import TweetsContainer from "./Components/TweetsContainer";
 import { auth, loginWithGoogle, logout } from "./firebase";
 
 function App() {
-
   const [user, setUser] = useState(null);
+  const [favTweets, setFavTweets] = useState([]);
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       setUser(user);
+      setFavTweets([]);
     });
   }, [user]);
 
@@ -26,8 +27,12 @@ function App() {
           Login con Google
         </button>
       )}
-      <FormNewTweet user={user}/>
-      <TweetsContainer user={user}/>
+      <FormNewTweet user={user} />
+      <TweetsContainer
+        user={user}
+        favTweets={favTweets}
+        setFavTweets={setFavTweets}
+      />
     </div>
   );
 }
