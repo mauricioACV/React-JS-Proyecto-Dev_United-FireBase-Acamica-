@@ -1,104 +1,17 @@
 import { useEffect, useState } from "react";
-import { firestore, auth, loginWithGoogle, logout } from "./firebase";
-
-const images = require.context("./imgs", true);
+import FormNewTweet from "./Components/FormNewTweet";
+import TweetsContainer from "./Components/TweetsContainer";
+import { auth, loginWithGoogle, logout } from "./firebase";
 
 function App() {
-  const [tweets, setTweets] = useState([]);
-  const [favTweets, setFavTweets] = useState([]);
-  const [tweet, setTweet] = useState({
-    tweet: "",
-    autor: "",
-    uid: "",
-    email: "",
-  });
-  const [user, setUser] = useState(null);
 
-  console.log(tweets);
-  console.log(favTweets);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       setUser(user);
     });
-    if (user) {
-      const unsubscribe = firestore
-        .collection("tweets")
-        .onSnapshot((snapshot) => {
-          const tweets = snapshot.docs.map((doc) => {
-            return {
-              tweet: doc.data().tweet,
-              autor: doc.data().autor,
-              id: doc.id,
-              likes: doc.data().likes,
-              email: doc.data().email,
-              uid: doc.data().uid,
-            };
-          });
-          setTweets(tweets);
-        });
-      return () => unsubscribe();
-    }
   }, [user]);
-
-  useEffect(() => {
-    if (user) {
-      const tweetsFav = firestore.collection("users").doc(user.email);
-
-      tweetsFav.get().then((doc) => {
-        if (!doc.exists) return;
-        setFavTweets(doc.data().fav);
-      });
-    }
-  }, [user]);
-
-  const handleChange = (e) => {
-    let nuevoTweet = {
-      tweet: e.target.value,
-      uid: user.uid,
-      email: user.email,
-      autor: user.displayName,
-    };
-    setTweet(nuevoTweet);
-  };
-
-  const sendTweet = (e) => {
-    e.preventDefault();
-    console.log(tweet);
-    firestore.collection("tweets").add(tweet);
-  };
-
-  const deleteTweet = (id) => {
-    firestore.doc(`tweets/${id}`).delete();
-  };
-
-  const likeTweet = (tweetId, likes = 0) => {
-    setUser(user);
-
-    const newFavTweets = [...favTweets, tweetId];
-    const objFavTweet = {
-      fav: newFavTweets,
-    };
-    console.log(favTweets);
-    if (favTweets.length) {
-      const alreadyLike = favTweets.includes(tweetId);
-      if (alreadyLike) {
-        const favFilter = favTweets.filter((item) => item !== tweetId);
-        firestore.doc(`tweets/${tweetId}`).update({ likes: likes - 1 });
-        firestore.doc(`users/${user.email}`).update({ fav: favFilter });
-        setFavTweets(favFilter);
-      } else {
-        console.log(tweetId);
-        firestore.doc(`tweets/${tweetId}`).update({ likes: likes + 1 });
-        firestore.doc(`users/${user.email}`).update({ fav: newFavTweets });
-        setFavTweets(newFavTweets);
-      }
-    } else {
-      firestore.doc(`tweets/${tweetId}`).update({ likes: likes + 1 });
-      firestore.collection("users").doc(user.email).set(objFavTweet);
-      setFavTweets(newFavTweets);
-    }
-  };
 
   return (
     <div className="App">
@@ -113,54 +26,8 @@ function App() {
           Login con Google
         </button>
       )}
-      <form className="App-form-container">
-        <div className="form-container">
-          <textarea
-            placeholder="escribe un tweet..."
-            className="tweet-text"
-            onChange={handleChange}
-            name="tweet"
-            rows="4"
-            cols="50"
-          ></textarea>
-          <div className="autor-buttons">
-            <button className="send-tweet" onClick={sendTweet}>
-              Enviar tweet
-            </button>
-          </div>
-        </div>
-      </form>
-      <div className="tweet-container">
-        {user &&
-          tweets.map((tweet) => (
-            <div key={tweet.id} className="tweet">
-              <div className="autor-container">
-                <p className="font-style-tweet">{tweet.tweet}</p>
-                <p className="">por: {tweet.autor}</p>
-                <p className="">{tweet.email}</p>
-              </div>
-              <div className="buttons-tweets-container">
-                {user && user.uid === tweet.uid && (
-                  <img
-                    src={images("./deleteIcon.svg").default}
-                    onClick={() => deleteTweet(tweet.id)}
-                    className="delete-icon like-item"
-                    alt="Borrar Tweet"
-                  />
-                )}
-                <div className="likes-container">
-                  <img
-                    src={images("./corazon.svg").default}
-                    onClick={() => likeTweet(tweet.id, tweet.likes)}
-                    className="like-icon like-item"
-                    alt=""
-                  />
-                  <p className="like-item">{tweet.likes || 0}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-      </div>
+      <FormNewTweet user={user}/>
+      <TweetsContainer user={user}/>
     </div>
   );
 }
