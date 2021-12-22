@@ -26,6 +26,7 @@ body {
 }
 
 .dev-united-app {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -107,29 +108,27 @@ body {
 }
 
 .form-container {
-  width: 50%;
+  margin-top: 20px;
+  width: 60%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.tweet-text {
-  margin-top: 20px;
-  background: #2F112D;
-  color: #2F112D;
-  width: 60%;
-  height: 113px;
-  padding: 5px;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 20px;
-  line-height: 26px;
-  letter-spacing: -0.333333px;
+.form-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.profile-pic-tweet {
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
 }
 
 .autor-button{
-  width: 60%;
-  padding: 10px 0px;
+  width: 100%;
+  padding: 0px 0px 10px 15px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -148,17 +147,82 @@ body {
 
 .tweets-app {
   margin-top: 30px;
-  width: 50%;
+  width: 70%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
+.tweet {
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  background-color: #2E132C;
+  border-radius: 5px;
+  width: 100%;
+  box-shadow: 0 0.2px 0.9px -3px rgba(0, 0, 0, 0.022),
+    0 0.5px 2.3px -3px rgba(0, 0, 0, 0.031),
+    0 1.1px 4.6px -3px rgba(0, 0, 0, 0.039),
+    0 2.2px 9.5px -3px rgba(0, 0, 0, 0.048), 0 6px 26px -3px rgba(0, 0, 0, 0.07);
+}
+
+.tweet-text {
+  margin-left: 15px;
+  background: #2F112D;
+  color: #914D8B;
+  width: 500px;
+  height: 113px;
+  padding: 5px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 26px;
+  letter-spacing: -0.333333px;
+  resize: none;
+  border: none;
+  border-bottom: 2px solid rgb(47, 255, 57);
+  outline: none;
+}
+
 .tweet-container{
+  margin-top: 20px;
   width: 60%;
   padding: 0px 5px;
   display: flex;
+  border-bottom: 2px solid #60265B;
+}
+
+.tweet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tweet-data {
+  display: flex;
+}
+
+.tweet-author {
+  padding: 3px;
+  background: purple;
+  font-family: Silkscreen;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.333333px;
+}
+
+.tweet-message {
+  margin: 10px 0px;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 24px;
+  letter-spacing: -0.333333px;
 }
 
 .send-tweet {
@@ -186,23 +250,14 @@ body {
   padding: 3px;
 }
 
-.tweet {
-  margin: 8px 0px;
-  padding: 8px 10px;
-  display: flex;
-  flex-direction: column;
-  background-color: #2E132C;
-  border-radius: 5px;
-  max-width: 550px;
-  margin: 15px auto;
-  box-shadow: 0 0.2px 0.9px -3px rgba(0, 0, 0, 0.022),
-    0 0.5px 2.3px -3px rgba(0, 0, 0, 0.031),
-    0 1.1px 4.6px -3px rgba(0, 0, 0, 0.039),
-    0 2.2px 9.5px -3px rgba(0, 0, 0, 0.048), 0 6px 26px -3px rgba(0, 0, 0, 0.07);
-}
-
 .font-style-tweet {
-  font-weight: bold;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.333333px;
 }
 
 .buttons-tweets-container {
@@ -214,7 +269,7 @@ body {
 .delete {
   border-radius: 5px;
   height: 25px;
-  color: white;
+  color: #fff;
   padding: 5px;
   cursor: pointer;
   margin-left: 10px;
@@ -223,10 +278,13 @@ body {
   align-items: center;
 }
 
+.delete-icon {
+  cursor: pointer;
+  width: 25px;
+}
+
 .likes-container {
   border-radius: 5px;
-  padding: 5px;
-  margin: 0px 5px;
   display: flex;
   align-items: center;
 }
@@ -236,32 +294,47 @@ body {
   width: 15px;
 }
 
-.like-item {
-  margin: 0px 2px;
-  font-size: .9rem;
-  font-weight: bold;
-}
-
-.delete-icon {
-  cursor: pointer;
-  width: 25px;
+.like-count {
+  margin-left: 5px;
+  font-family: Fira Code;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 21px;
+  letter-spacing: -0.333333px;
+  color: #F50D5A;
 }
 
 .user-profile {
   width: 100%;
-  max-width: 440px;
+  max-width: 580px;
   display: flex;
   align-items: center;
-  justify-content: space-evenly;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  margin: 10px 0px;
 }
 
-.user-profile button {
-  margin-left: 10px;
-  padding: 10px;
-}
-
-.user-profile img {
+.user-profile .user-profile-pic {
   border-radius: 50%;
   margin-right: 10px;
+  width: 33px;
+}
+
+.dev_united_logo {
+  width: 159px;
+}
+
+.logo_small {
+  margin-left: 100px;
+}
+
+.tweet-indicator {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.new-tweet-container {
+  width: 100%;
 }

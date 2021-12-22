@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Route } from "react-router-dom";
 import Login from "./Components/Login";
 import DevUnitedApp from "./Components/DevUnitedApp";
-import { auth } from "./firebase";
+import { firestore, auth } from "./firebase";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -11,6 +11,17 @@ function App() {
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       setUser(user);
+      if(user) {
+        const tweetsFav = firestore.collection("users").doc(user.email);
+        tweetsFav.get().then((doc) => {
+          if (!doc.exists) {
+            firestore
+              .collection("users")
+              .doc(user.email)
+              .set({ photoUrl: user.photoURL });
+          }
+        });
+      }
       setFavTweets([]);
     });
   }, [user]);
