@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { firestore } from "../firebase";
 
-export default function TweetsContainer({ user, favTweets, setFavTweets }) {
+export default function TweetsContainer({
+  user,
+  favTweets,
+  setFavTweets,
+  color,
+}) {
   const images = require.context("../imgs", true);
 
   const [tweets, setTweets] = useState([]);
@@ -86,7 +91,16 @@ export default function TweetsContainer({ user, favTweets, setFavTweets }) {
             <div className="tweet">
               <div className="tweet-header">
                 <div className="tweet-data">
-                  <p className="tweet-author">{tweet.autor}</p>
+                  <p
+                    className="tweet-author"
+                    style={{
+                      backgroundColor: `${
+                        user.uid === tweet.uid ? color.hex : "#800FFF"
+                      }`,
+                    }}
+                  >
+                    {tweet.autor}
+                  </p>
                   &nbsp;
                   <p className="tweet-date">- 5 jun.</p>
                 </div>

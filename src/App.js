@@ -1,17 +1,20 @@
 import { useEffect, useState } from "react";
-import { Route } from "react-router-dom";
-import Login from "./Components/Login";
-import DevUnitedApp from "./Components/DevUnitedApp";
 import { firestore, auth } from "./firebase";
+import { Route } from "react-router-dom";
+import DevUnitedApp from "./Components/DevUnitedApp";
+import FrontPageMain from "./Components/FrontPageMain";
 
 function App() {
+  const [userName, setUserName] = useState(null);
   const [user, setUser] = useState(null);
   const [favTweets, setFavTweets] = useState([]);
+  const [color, setColor] = useState({});
+
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       setUser(user);
-      if(user) {
+      if (user) {
         const tweetsFav = firestore.collection("users").doc(user.email);
         tweetsFav.get().then((doc) => {
           if (!doc.exists) {
@@ -32,14 +35,16 @@ function App() {
         exact
         path="/"
         render={() => {
-          return user ? (
+          return userName ? (
             <DevUnitedApp
               user={user}
               favTweets={favTweets}
               setFavTweets={setFavTweets}
+              setUserName={setUserName}
+              color={color}
             />
           ) : (
-            <Login />
+            <FrontPageMain user={user} setUserName={setUserName} setColor={setColor}/>
           );
         }}
       />

@@ -205,7 +205,6 @@ body {
 
 .tweet-author {
   padding: 3px;
-  background: purple;
   font-family: Silkscreen;
   font-style: normal;
   font-weight: bold;
@@ -337,4 +336,11 @@ body {
 
 .new-tweet-container {
   width: 100%;
+}
+
+.color {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 1px solid black;
 }
