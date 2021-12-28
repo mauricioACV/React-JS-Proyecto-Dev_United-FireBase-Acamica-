@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { firestore } from "../firebase";
 
-export default function FormNewTweet({ user }) {
+export default function FormNewTweet({ user, userNick }) {
   const [tweet, setTweet] = useState({
     tweet: "",
     autor: "",
@@ -16,6 +16,7 @@ export default function FormNewTweet({ user }) {
       uid: user.uid,
       email: user.email,
       autor: user.displayName,
+      // autor: userNick,
       photoAuthor: user.photoURL,
     };
     setTweet(nuevoTweet);

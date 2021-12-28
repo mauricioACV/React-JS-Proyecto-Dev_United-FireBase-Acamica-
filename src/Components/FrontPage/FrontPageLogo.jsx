@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function FrontPageLogo() {
-  const images = require.context("../imgs/Front_Page", true);
+  const images = require.context("../../imgs/Front_Page", true);
   return (
     <div className="logo-container">
       <img

@@ -3,6 +3,7 @@ import { firestore } from "../firebase";
 
 export default function TweetsContainer({
   user,
+  userNick,
   favTweets,
   setFavTweets,
   color,
@@ -99,7 +100,7 @@ export default function TweetsContainer({
                       }`,
                     }}
                   >
-                    {tweet.autor}
+                    {user.uid === tweet.uid ? userNick : tweet.autor}
                   </p>
                   &nbsp;
                   <p className="tweet-date">- 5 jun.</p>

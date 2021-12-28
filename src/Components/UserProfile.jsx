@@ -1,10 +1,10 @@
 import React from 'react'
 import { logout } from "../firebase"; 
 
-export default function UserProfile({user, setUserName}) {
+export default function UserProfile({user, setUserNick}) {
   const images = require.context("../imgs", true);
   const handleLogout = () => {
-    setUserName(null);
+    setUserNick(null);
     logout();
   }
 

@@ -1,9 +1,9 @@
 import React from "react";
-import { loginWithGoogle } from "../firebase";
+import { loginWithGoogle } from "../../firebase";
 import FrontPageFooter from "./FrontPageFooter";
 
 export default function FrontPageLogin() {
-  const images = require.context("../imgs/Front_Page", true);
+  const images = require.context("../../imgs/Front_Page", true);
   return (
     <div className="login-container">
       <div className="login-container_info">
