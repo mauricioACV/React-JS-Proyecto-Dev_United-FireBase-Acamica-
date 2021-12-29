@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
-import { firestore } from "../firebase";
+import { firestore } from "../../firebase";
 
-export default function TweetsContainer({
+export default function DevUnitedFeed({
   user,
   userNick,
   favTweets,
   setFavTweets,
   color,
 }) {
-  const images = require.context("../imgs", true);
+  const images = require.context("../../imgs", true);
 
   const [tweets, setTweets] = useState([]);
-
-  console.log(tweets);
 
   useEffect(() => {
     if (user) {
@@ -23,6 +21,7 @@ export default function TweetsContainer({
             return {
               tweet: doc.data().tweet,
               autor: doc.data().autor,
+              nickname: doc.data().nickname,
               id: doc.id,
               likes: doc.data().likes,
               email: doc.data().email,
@@ -37,13 +36,11 @@ export default function TweetsContainer({
   }, [user]);
 
   useEffect(() => {
-    if (user) {
       const tweetsFav = firestore.collection("users").doc(user.email);
       tweetsFav.get().then((doc) => {
         if (!doc.exists) return;
         if (doc.data().fav) setFavTweets(doc.data().fav);
       });
-    }
   }, [user]);
 
   const deleteTweet = (id) => {
@@ -100,7 +97,7 @@ export default function TweetsContainer({
                       }`,
                     }}
                   >
-                    {user.uid === tweet.uid ? userNick : tweet.autor}
+                    {user.uid === tweet.uid ? userNick : tweet.nickname}
                   </p>
                   &nbsp;
                   <p className="tweet-date">- 5 jun.</p>

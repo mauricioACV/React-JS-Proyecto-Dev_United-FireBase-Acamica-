@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { firestore } from "../../firebase";
 import ColorPicker from "./ColorPicker";
 import FrontPageFooter from "./FrontPageFooter";
@@ -9,7 +9,27 @@ export default function FrontPageWelcome({
   setUserColor,
   userColor,
 }) {
-  const [userNickname, setUserNickname] = useState(user.displayName);
+  const [userNickname, setUserNickname] = useState("");
+
+  useEffect(() => {
+    const getUserNickname = async () => {
+      const nickname = await firestore
+        .collection("users")
+        .doc(user.email)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            return doc.data().nickname;
+          }
+          else {
+            return null;
+          }
+        });
+        setUserNickname(nickname);
+    };
+    getUserNickname();
+  }, [])
+
 
   const handleChange = (e) => {
     setUserNickname(e.target.value);
@@ -49,7 +69,10 @@ export default function FrontPageWelcome({
       .doc(userEmail)
       .get()
       .then((doc) => {
-        firestore.collection("usersNicknames").doc(nickname).set({ userId : userEmail });
+        firestore
+          .collection("usersNicknames")
+          .doc(nickname)
+          .set({ userId: userEmail });
       });
   };
 

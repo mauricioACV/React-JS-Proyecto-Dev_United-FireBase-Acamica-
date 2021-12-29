@@ -1,10 +1,12 @@
 import React from 'react'
-import { logout } from "../firebase"; 
+import { logout } from "../../firebase"; 
 
-export default function UserProfile({user, setUserNick}) {
-  const images = require.context("../imgs", true);
+export default function DevUnitedHeader({user, setUserNick}) {
+
+  const images = require.context("../../imgs", true);
+  
   const handleLogout = () => {
-    setUserNick(null);
+    // setUserNick(null);
     logout();
   }
 
