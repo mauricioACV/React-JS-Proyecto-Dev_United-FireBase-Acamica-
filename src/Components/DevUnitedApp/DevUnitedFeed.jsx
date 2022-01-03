@@ -6,7 +6,7 @@ export default function DevUnitedFeed({
   userNick,
   favTweets,
   setFavTweets,
-  color,
+  userColor,
 }) {
   const images = require.context("../../imgs", true);
 
@@ -93,7 +93,7 @@ export default function DevUnitedFeed({
                     className="tweet-author"
                     style={{
                       backgroundColor: `${
-                        user.uid === tweet.uid ? color.hex : "#800FFF"
+                        user.uid === tweet.uid ? userColor.hex : "#800FFF"
                       }`,
                     }}
                   >

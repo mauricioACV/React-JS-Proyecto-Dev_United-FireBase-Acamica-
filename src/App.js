@@ -1,9 +1,11 @@
 import { useEffect, useState, useContext } from "react";
 import { AppContext } from "./Context/ContextProvider.js";
 import { firestore, auth } from "./firebase";
-import { Route } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import DevUnitedApp from "./Components/DevUnitedApp/DevUnitedApp";
 import FrontPageMain from "./Components/FrontPage/FrontPageMain";
+import UserProfile from "./Components/UserProfile";
+import AccesoDenegado from "./Components/AccesoDenegado.jsx";
 
 function App() {
   const { userNick, setUserNick } = useContext(AppContext);
@@ -12,24 +14,56 @@ function App() {
   const [favTweets, setFavTweets] = useState([]);
   const [userColor, setUserColor] = useState({});
 
+  const getUserNickname = async (email) => {
+    const nickname = await firestore
+      .collection("users")
+      .doc(email)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          return doc.data().nickname;
+        } else {
+          return null;
+        }
+      });
+    setUserNick(nickname);
+  };
+
+  const getUserColor = async (email) => {
+    const color = await firestore
+      .collection("users")
+      .doc(email)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          return { name: doc.data().color.name, hex: doc.data().color.hex };
+        } else {
+          return {};
+        }
+      });
+    setUserColor(color);
+  };
+
+  const saveUserPhoto = async (email, urlPhoto) => {
+    await firestore
+      .collection("users")
+      .doc(email)
+      .get()
+      .then((doc) => {
+        if (!doc.exists) {
+          firestore.collection("users").doc(email).set({ photoUrl: urlPhoto });
+        }
+      });
+  };
+
   const handleUserAuthState = (user) => {
     setUser(user);
     if (user) {
-      firestore
-        .collection("users")
-        .doc(user.email)
-        .get()
-        .then((doc) => {
-          if (!doc.exists) {
-            firestore
-              .collection("users")
-              .doc(user.email)
-              .set({ photoUrl: user.photoURL });
-          }
-        });
+      getUserNickname(user.email);
+      getUserColor(user.email);
+      saveUserPhoto(user.email, user.photoURL);
     }
     setFavTweets([]);
-    setUserColor({ name: "red", hex: "#F50D5A" });
   };
 
   useEffect(() => {
@@ -38,30 +72,41 @@ function App() {
 
   return (
     <div className="App">
-      <Route
-        exact
-        path="/"
-        render={() => {
+      <Switch>
+        <Route
+          exact
+          path="/"
+          render={() => {
+            return user && userNick ? (
+              <DevUnitedApp
+                user={user}
+                favTweets={favTweets}
+                setFavTweets={setFavTweets}
+                setUserNick={setUserNick}
+                userNick={userNick}
+                setUserColor={setUserColor}
+                userColor={userColor}
+              />
+            ) : (
+              <FrontPageMain
+                user={user}
+                userNick={userNick}
+                setUserNick={setUserNick}
+                setUserColor={setUserColor}
+                userColor={userColor}
+              />
+            );
+          }}
+        />
+        <Route exact path="/UserProfile" render={()=>{
           return user && userNick ? (
-            <DevUnitedApp
-              user={user}
-              favTweets={favTweets}
-              setFavTweets={setFavTweets}
-              setUserNick={setUserNick}
-              userNick={userNick}
-              color={userColor}
-            />
+            <UserProfile/>
           ) : (
-            <FrontPageMain
-              user={user}
-              userNick={userNick}
-              setUserNick={setUserNick}
-              setUserColor={setUserColor}
-              userColor={userColor}
-            />
-          );
-        }}
-      />
+            <AccesoDenegado/>
+          )
+        }}/>
+          <UserProfile />
+      </Switch>
     </div>
   );
 }

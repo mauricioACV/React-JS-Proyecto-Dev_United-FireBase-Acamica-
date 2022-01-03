@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { firestore } from "../../firebase";
 import ColorPicker from "./ColorPicker";
 import FrontPageFooter from "./FrontPageFooter";
@@ -10,26 +10,6 @@ export default function FrontPageWelcome({
   userColor,
 }) {
   const [userNickname, setUserNickname] = useState("");
-
-  useEffect(() => {
-    const getUserNickname = async () => {
-      const nickname = await firestore
-        .collection("users")
-        .doc(user.email)
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            return doc.data().nickname;
-          }
-          else {
-            return null;
-          }
-        });
-        setUserNickname(nickname);
-    };
-    getUserNickname();
-  }, [])
-
 
   const handleChange = (e) => {
     setUserNickname(e.target.value);
@@ -55,13 +35,16 @@ export default function FrontPageWelcome({
     return response;
   };
 
-  const updateUserNickname = (userEmail, nickname) => {
+  const saveUserNickname = (userEmail, nickname, color) => {
     firestore
       .collection("users")
       .doc(userEmail)
       .get()
       .then((doc) => {
-        firestore.collection("users").doc(userEmail).update({ nickname });
+        firestore
+          .collection("users")
+          .doc(userEmail)
+          .update({ nickname, color });
       });
 
     firestore
@@ -79,7 +62,7 @@ export default function FrontPageWelcome({
   const handleSubmit = async () => {
     const isValidNickename = await checkNickname(userNickname, user.email);
     if (isValidNickename) {
-      updateUserNickname(user.email, userNickname);
+      saveUserNickname(user.email, userNickname, userColor);
       setUserNick(userNickname);
     } else {
       return;
