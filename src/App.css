@@ -19,6 +19,10 @@ body {
   color: #fff;
 }
 
+a {
+  text-decoration: none;
+}
+
 .App {
   /* display: flex;
   flex-direction: column;
@@ -159,6 +163,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  border-bottom: 3px solid #60265B;
 }
 
 .form-container {
@@ -371,6 +376,69 @@ body {
   border-radius: 50%;
   margin-right: 10px;
   width: 33px;
+}
+
+.user-profile-back {
+  width: 150px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-profile-name {
+  font-family: Silkscreen;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 20px;
+  letter-spacing: -0.333333px;
+  color: #fff;
+}
+
+.user-profile-dashboard-photo {
+  width: 135px;
+  border-radius: 50%;
+  outline: 5px solid yellow;
+}
+
+.user-profile-dashboard-name {
+  margin: 20px 0px 25px 0px;
+  font-family: Silkscreen;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 30px;
+  text-align: center;
+  letter-spacing: -0.333333px;
+  color: #150714;
+  background: yellow;
+  padding: 2px 5px;
+}
+
+.user-profile-dashboard-options {
+  width: 63%;
+  display: flex;
+  justify-content: center;
+}
+
+.user-profile-options-style {
+  color: #60265B;
+  width: 300px;
+  height: 46px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Silkscreen;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 24px;
+  letter-spacing: -0.333333px;
+}
+
+.dummy-style {
+  background: #60265B;
+  color: #150714;
 }
 
 .dev_united_logo {

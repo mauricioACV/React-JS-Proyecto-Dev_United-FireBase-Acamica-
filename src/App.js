@@ -98,14 +98,21 @@ function App() {
             );
           }}
         />
-        <Route exact path="/UserProfile" render={()=>{
-          return user && userNick ? (
-            <UserProfile/>
-          ) : (
-            <AccesoDenegado/>
-          )
-        }}/>
-          <UserProfile />
+        <Route
+          exact
+          path="/UserProfile"
+          render={() => {
+            return user && userNick ? (
+              <UserProfile
+                user={user}
+                setUserNick={setUserNick}
+                setUserColor={setUserColor}
+              />
+            ) : (
+              <AccesoDenegado />
+            );
+          }}
+        />
       </Switch>
     </div>
   );
