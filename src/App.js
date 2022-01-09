@@ -5,7 +5,7 @@ import { Route, Switch } from "react-router-dom";
 import DevUnitedApp from "./Components/DevUnitedApp/DevUnitedApp";
 import FrontPageMain from "./Components/FrontPage/FrontPageMain";
 import UserProfile from "./Components/UserProfile";
-import AccesoDenegado from "./Components/AccesoDenegado.jsx";
+import AccessDenied from "./Components/AccessDenied.jsx";
 
 function App() {
   const { userNick, setUserNick } = useContext(AppContext);
@@ -56,9 +56,9 @@ function App() {
       });
   };
 
-  const handleUserAuthState = (user) => {
+  const handleUserAuthState = (user=null) => {
     setUser(user);
-    if (user) {
+    if (user!=null) {
       getUserNickname(user.email);
       getUserColor(user.email);
       saveUserPhoto(user.email, user.photoURL);
@@ -105,11 +105,13 @@ function App() {
             return user && userNick ? (
               <UserProfile
                 user={user}
+                userNick={userNick}
                 setUserNick={setUserNick}
                 setUserColor={setUserColor}
+                userColor={userColor}
               />
             ) : (
-              <AccesoDenegado />
+              <AccessDenied />
             );
           }}
         />

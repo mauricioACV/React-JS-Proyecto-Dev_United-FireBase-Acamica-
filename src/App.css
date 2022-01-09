@@ -379,7 +379,7 @@ a {
 }
 
 .user-profile-back {
-  width: 150px;
+  width: 130px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -398,7 +398,7 @@ a {
 .user-profile-dashboard-photo {
   width: 135px;
   border-radius: 50%;
-  outline: 5px solid yellow;
+  /* outline: 5px solid yellow; */
 }
 
 .user-profile-dashboard-name {
@@ -422,7 +422,10 @@ a {
 }
 
 .user-profile-options-style {
+  border: none;
   color: #60265B;
+  background: #150714;
+  cursor: pointer;
   width: 300px;
   height: 46px;
   display: flex;
