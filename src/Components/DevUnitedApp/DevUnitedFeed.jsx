@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { firestore } from "../../firebase";
+import { handleLikeTweet } from '../../Handlers/tweetsHandlers';
+import tweetsHelper from "../../Helpers/tweetsHelpers";
+import userHelpers from '../../Helpers/userHelpers'
 
 export default function DevUnitedFeed({
   user,
@@ -37,42 +40,16 @@ export default function DevUnitedFeed({
   }, [user]);
 
   useEffect(() => {
-      const tweetsFav = firestore.collection("users").doc(user.email);
-      tweetsFav.get().then((doc) => {
-        if (!doc.exists) return;
-        if (doc.data().fav) setFavTweets(doc.data().fav);
-      });
+    const tweetsFav = firestore.collection("users").doc(user.email);
+    tweetsFav.get().then((doc) => {
+      if (!doc.exists) return;
+      if (doc.data().fav) setFavTweets(doc.data().fav);
+    });
   }, []);
 
-  const deleteTweet = (id) => {
-    firestore.doc(`tweets/${id}`).delete();
-  };
-
   const likeTweet = (tweetId, likes = 0) => {
-    const newFavTweets = [...favTweets, tweetId];
-    if (favTweets.length) {
-      if (isFavTweet(tweetId)) {
-        const favFilter = favTweets.filter((item) => item !== tweetId);
-        firestore.doc(`tweets/${tweetId}`).update({ likes: likes - 1 });
-        firestore.doc(`users/${user.email}`).update({ fav: favFilter });
-        setFavTweets(favFilter);
-      } else {
-        firestore.doc(`tweets/${tweetId}`).update({ likes: likes + 1 });
-        firestore.doc(`users/${user.email}`).update({ fav: newFavTweets });
-        setFavTweets(newFavTweets);
-      }
-    } else {
-      firestore.doc(`tweets/${tweetId}`).update({ likes: likes + 1 });
-      firestore.doc(`users/${user.email}`).update({ fav: newFavTweets });
-      setFavTweets(newFavTweets);
-    }
-  };
-
-  const isFavTweet = (tweetId) => {
-    if (favTweets) {
-      return favTweets.includes(tweetId);
-    }
-    return false;
+    const newFavTweets = handleLikeTweet(user.email, favTweets, tweetId, likes);
+    setFavTweets(newFavTweets);
   };
 
   return (
@@ -81,12 +58,16 @@ export default function DevUnitedFeed({
         tweets.map((tweet) => (
           <div key={tweet.id} className="tweet-container">
             <div className="user-profile-photo">
-            <Link to={`${user.uid === tweet.uid ? "/UserProfile" : "/"+tweet.nickname }`}>
-              <img
-                className="profile-pic-tweet"
-                src={tweet.photoAuthor}
-                alt=""
-              />
+              <Link
+                to={`${
+                  user.uid === tweet.uid ? "/UserProfile" : "/" + tweet.nickname
+                }`}
+              >
+                <img
+                  className="profile-pic-tweet"
+                  src={tweet.photoAuthor}
+                  alt=""
+                />
               </Link>
             </div>
             <div className="tweet">
@@ -108,7 +89,7 @@ export default function DevUnitedFeed({
                 {user && user.uid === tweet.uid && (
                   <img
                     src={images("./deleteIcon.svg").default}
-                    onClick={() => deleteTweet(tweet.id)}
+                    onClick={() => tweetsHelper.delete(tweet.id)}
                     className="delete-icon like-item"
                     alt="Borrar Tweet"
                   />
@@ -121,8 +102,13 @@ export default function DevUnitedFeed({
                 <div className="likes-container">
                   <img
                     src={
-                      images(`./corazon${isFavTweet(tweet.id) ? "" : "_"}.svg`)
-                        .default
+                      images(
+                        `./corazon${
+                          userHelpers.isFavTweet(favTweets, tweet.id)
+                            ? ""
+                            : "_"
+                        }.svg`
+                      ).default
                     }
                     onClick={() => likeTweet(tweet.id, tweet.likes)}
                     className="like-icon like-item"
