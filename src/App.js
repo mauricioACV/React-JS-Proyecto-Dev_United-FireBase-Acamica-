@@ -14,6 +14,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [favTweets, setFavTweets] = useState([]);
   const [userColor, setUserColor] = useState({});
+  
   const getUserNickname = async (email) => {
     const nickname = await firestore
       .collection("users")
@@ -121,7 +122,7 @@ function App() {
           render={() => {
             return user ? (
               <UserProfileForeing
-                // user={user}
+                user={user}
                 // userNick={userNick}
                 // setUserNick={setUserNick}
                 // setUserColor={setUserColor}
