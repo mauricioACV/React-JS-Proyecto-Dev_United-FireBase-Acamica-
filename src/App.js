@@ -5,6 +5,7 @@ import { Route, Switch } from "react-router-dom";
 import DevUnitedApp from "./Components/DevUnitedApp/DevUnitedApp";
 import FrontPageMain from "./Components/FrontPage/FrontPageMain";
 import UserProfile from "./Components/UserProfile";
+import UserProfileForeing from "./Components/UserProfileForeing.jsx";
 import AccessDenied from "./Components/AccessDenied.jsx";
 
 function App() {
@@ -13,7 +14,6 @@ function App() {
   const [user, setUser] = useState(null);
   const [favTweets, setFavTweets] = useState([]);
   const [userColor, setUserColor] = useState({});
-
   const getUserNickname = async (email) => {
     const nickname = await firestore
       .collection("users")
@@ -100,7 +100,7 @@ function App() {
         />
         <Route
           exact
-          path="/UserProfile"
+          path="/UserProfile/"
           render={() => {
             return user && userNick ? (
               <UserProfile
@@ -109,6 +109,23 @@ function App() {
                 setUserNick={setUserNick}
                 setUserColor={setUserColor}
                 userColor={userColor}
+              />
+            ) : (
+              <AccessDenied />
+            );
+          }}
+        />
+        <Route
+          exact
+          path="/:usernickname"
+          render={() => {
+            return user ? (
+              <UserProfileForeing
+                // user={user}
+                // userNick={userNick}
+                // setUserNick={setUserNick}
+                // setUserColor={setUserColor}
+                // userColor={userColor}
               />
             ) : (
               <AccessDenied />

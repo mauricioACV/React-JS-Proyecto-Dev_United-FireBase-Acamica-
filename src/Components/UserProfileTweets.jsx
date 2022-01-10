@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
 import { firestore } from "../firebase";
 
-export default function UserProfileTweets({ user, userColor, userTweets }) {
+export default function UserProfileTweets({ user, userColor, tweets }) {
   const images = require.context("../imgs", true);
 
   const [favTweets, setFavTweets] = useState(null);
+  const [userTweets, setUserTweets] = useState([]);
 
   const deleteTweet = (id) => {
     firestore.doc(`tweets/${id}`).delete();
   };
+
+  useEffect(() => {
+    const userTweetsFilter = tweets.filter((tweet) => user.uid === tweet.uid);
+    setUserTweets(userTweetsFilter);
+  }, [tweets]);
 
   useEffect(() => {
     const getFavTweets = async (userEmail) => {

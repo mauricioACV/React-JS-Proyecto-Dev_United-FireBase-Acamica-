@@ -1,24 +1,33 @@
 import { useEffect, useState } from "react";
 import { firestore } from "../firebase";
 
-export default function UserProfileFavTweets({ user, tweets }) {
+export default function UserProfileFavTweets({
+  user,
+  tweets,
+  userNick,
+  userColor,
+}) {
   const images = require.context("../imgs", true);
 
   const [favTweets, setFavTweets] = useState(null);
-
-  const filterFavTweets = (favIds, allTweets) => {
-    let favFilter = [];
-    favIds?.forEach((idFavTweet) => {
-      allTweets.forEach((tweet) => {
-        if (tweet.id === idFavTweet) favFilter.push(tweet);
-      });
-    });
-    setFavTweets(favFilter);
-  };
+  const [userFavTweets, setUserFavTweets] = useState([]);
 
   const deleteTweet = (id) => {
     firestore.doc(`tweets/${id}`).delete();
   };
+
+  useEffect(() => {
+    const filterFavTweets = (favIds) => {
+      let favFilter = [];
+      favIds?.forEach((idFavTweet) => {
+        tweets.forEach((tweet) => {
+          if (tweet.id === idFavTweet) favFilter.push(tweet);
+        });
+      });
+      setFavTweets(favFilter);
+    };
+    filterFavTweets(userFavTweets);
+  }, [tweets, userFavTweets]);
 
   useEffect(() => {
     const getFavTweets = async (userEmail) => {
@@ -30,10 +39,10 @@ export default function UserProfileFavTweets({ user, tweets }) {
           if (!doc.exists) return null;
           if (doc.data().fav) return doc.data().fav;
         });
-      filterFavTweets(tweetsFav, tweets);
+      setUserFavTweets(tweetsFav);
     };
     getFavTweets(user.email);
-  }, [deleteTweet]);
+  }, [user]);
 
   return (
     <>
@@ -52,9 +61,13 @@ export default function UserProfileFavTweets({ user, tweets }) {
                 <div className="tweet-data">
                   <p
                     className="tweet-author"
-                    style={{ backgroundColor: "#800FFF" }}
+                    style={{
+                      backgroundColor: `${
+                        user.uid === tweet.uid ? userColor.hex : "#800FFF"
+                      }`,
+                    }}
                   >
-                    {tweet.nickname}
+                    {user.uid === tweet.uid ? userNick : tweet.nickname}
                   </p>
                   &nbsp;
                   <p className="tweet-date">- 5 jun.</p>

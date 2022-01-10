@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { firestore } from "../../firebase";
 
 export default function DevUnitedFeed({
@@ -41,7 +42,7 @@ export default function DevUnitedFeed({
         if (!doc.exists) return;
         if (doc.data().fav) setFavTweets(doc.data().fav);
       });
-  }, [user]);
+  }, []);
 
   const deleteTweet = (id) => {
     firestore.doc(`tweets/${id}`).delete();
@@ -80,11 +81,13 @@ export default function DevUnitedFeed({
         tweets.map((tweet) => (
           <div key={tweet.id} className="tweet-container">
             <div className="user-profile-photo">
+            <Link to={`${user.uid === tweet.uid ? "/UserProfile" : "/"+tweet.nickname }`}>
               <img
                 className="profile-pic-tweet"
                 src={tweet.photoAuthor}
                 alt=""
               />
+              </Link>
             </div>
             <div className="tweet">
               <div className="tweet-header">

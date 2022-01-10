@@ -11,7 +11,6 @@ export default function UserProfileHeader({ setUserNick, setUserColor, userNick 
   };
 
   return (
-    <div className="dev-united-app">
       <div className="user-profile">
         <Link to="/">
           <div className="user-profile-back">
@@ -32,6 +31,5 @@ export default function UserProfileHeader({ setUserNick, setUserColor, userNick 
           />
         </Link>
       </div>
-    </div>
   );
 }

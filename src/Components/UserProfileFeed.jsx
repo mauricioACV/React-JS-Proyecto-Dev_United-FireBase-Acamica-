@@ -3,12 +3,10 @@ import { firestore } from "../firebase";
 import UserProfileFavTweets from "./UserProfileFavTweets";
 import UserProfileTweets from "./UserProfileTweets";
 
-export default function UserProfileFeed({ user, userColor, favActive }) {
-  const [userTweets, setUserTweets] = useState([]);
+export default function UserProfileFeed({ user, userColor, userNick, favActive }) {
   const [tweets, setTweets] = useState([]);
 
   useEffect(() => {
-    if (user) {
       const unsubscribe = firestore
         .collection("tweets")
         .onSnapshot((snapshot) => {
@@ -25,19 +23,16 @@ export default function UserProfileFeed({ user, userColor, favActive }) {
             };
           });
           setTweets(tweets);
-          const userTweetsFilter = tweets.filter((tweet) => user.uid === tweet.uid);
-          setUserTweets(userTweetsFilter);
         });
       return () => unsubscribe();
-    }
   }, [user]);
 
   return (
     <div className="tweets-app">
       {favActive ? (
-        <UserProfileFavTweets user={user} tweets={tweets} />
+        <UserProfileFavTweets user={user} tweets={tweets} userColor={userColor} userNick={userNick} />
       ) : (
-        <UserProfileTweets user={user} userColor={userColor} userTweets={userTweets} />
+        <UserProfileTweets user={user} userColor={userColor} tweets={tweets} />
       )}
     </div>
   );

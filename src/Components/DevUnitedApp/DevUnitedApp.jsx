@@ -17,8 +17,6 @@ export default function DevUnitedApp({
     <div className="dev-united-app">
       <DevUnitedHeader
         user={user}
-        setUserNick={setUserNick}
-        setUserColor={setUserColor}
       />
       <DevUnitedFormTweet user={user} userNick={userNick} />
       <DevUnitedFeed

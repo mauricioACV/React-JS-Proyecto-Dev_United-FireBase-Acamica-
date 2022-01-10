@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { firestore } from "../../firebase";
 
 export default function DevUnitedFormTweet({ user, userNick }) {
@@ -24,14 +25,18 @@ export default function DevUnitedFormTweet({ user, userNick }) {
 
   const sendTweet = (e) => {
     e.preventDefault();
-    firestore.collection("tweets").add(tweet);
-    setTweet({
-      tweet: "",
-      autor: "",
-      uid: "",
-      email: "",
-      photoAuthor: "",
-    });
+    if (tweet.tweet) {
+      firestore.collection("tweets").add(tweet);
+      setTweet({
+        tweet: "",
+        autor: "",
+        uid: "",
+        email: "",
+        photoAuthor: "",
+      });
+    } else {
+      console.log('tweet vacío');
+    }
   };
 
   return (
@@ -39,7 +44,9 @@ export default function DevUnitedFormTweet({ user, userNick }) {
       <div className="form-container">
         <div className="form-header">
           <div className="user-profile-photo">
-            <img className="profile-pic-tweet" src={user.photoURL} alt="" />
+            <Link to="/UserProfile">
+              <img className="profile-pic-tweet" src={user.photoURL} alt="" />
+            </Link>
           </div>
           <div className="new-tweet-container">
             <textarea

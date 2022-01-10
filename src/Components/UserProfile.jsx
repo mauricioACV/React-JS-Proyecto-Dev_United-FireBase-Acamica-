@@ -10,6 +10,7 @@ export default function UserProfile({
   setUserColor,
   userColor,
 }) {
+
   const [favActive, setFavActive] = useState(false);
   return (
     <div className="dev-united-app">
@@ -19,7 +20,7 @@ export default function UserProfile({
         setUserColor={setUserColor}
       />
       <UserProfileDashboard user={user} userNick={userNick} userColor={userColor} favActive={favActive} setFavActive={setFavActive} />
-      <UserProfileFeed user={user} userColor={userColor} favActive={favActive} />
+      <UserProfileFeed user={user} userColor={userColor} favActive={favActive} userNick={userNick} />
     </div>
   );
 }
