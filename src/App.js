@@ -4,8 +4,8 @@ import { firestore, auth } from "./firebase";
 import { Route, Switch } from "react-router-dom";
 import DevUnitedApp from "./Components/DevUnitedApp/DevUnitedApp";
 import FrontPageMain from "./Components/FrontPage/FrontPageMain";
-import UserProfile from "./Components/UserProfile";
-import UserProfileForeing from "./Components/UserProfileForeing.jsx";
+import UserProfile from "./Components/UserProfile/UserProfile";
+import UserProfileForeing from "./Components/UserProfile/UserProfileForeing.jsx";
 import AccessDenied from "./Components/AccessDenied.jsx";
 
 function App() {
@@ -123,10 +123,6 @@ function App() {
             return user ? (
               <UserProfileForeing
                 user={user}
-                // userNick={userNick}
-                // setUserNick={setUserNick}
-                // setUserColor={setUserColor}
-                // userColor={userColor}
               />
             ) : (
               <AccessDenied />

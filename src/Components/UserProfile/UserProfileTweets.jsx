@@ -1,21 +1,18 @@
-import { useEffect } from "react";
-import { useTweets } from "../../Hooks/useTweets";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { handleLikeTweet } from "../../Handlers/tweetsHandlers";
 import tweetsHelper from "../../Helpers/tweetsHelpers";
 import userHelpers from "../../Helpers/userHelpers";
 
-export default function DevUnitedFeed({
-  user,
-  userNick,
-  favTweets,
-  setFavTweets,
-  userColor,
-}) {
+export default function UserProfileTweets({ user, userColor, tweets }) {
   const images = require.context("../../imgs", true);
 
-  const { tweets, loading } = useTweets(user);
-  
+  const [favTweets, setFavTweets] = useState(null);
+  const [userTweets, setUserTweets] = useState([]);
+
+  useEffect(() => {
+    const userTweetsFilter = tweets.filter((tweet) => user.uid === tweet.uid);
+    setUserTweets(userTweetsFilter);
+  }, [user, tweets]);
 
   useEffect(() => {
     tweetsHelper.getFav(user.email).then((data) => {
@@ -29,47 +26,35 @@ export default function DevUnitedFeed({
   };
 
   return (
-    <div className="tweets-app">
+    <>
       {user &&
-        tweets.map((tweet) => (
+        userTweets.map((tweet) => (
           <div key={tweet.id} className="tweet-container">
             <div className="user-profile-photo">
-              <Link
-                to={`${
-                  user.uid === tweet.uid ? "/UserProfile" : "/" + tweet.nickname
-                }`}
-              >
-                <img
-                  className="profile-pic-tweet"
-                  src={tweet.photoAuthor}
-                  alt=""
-                />
-              </Link>
+              <img
+                className="profile-pic-tweet"
+                src={tweet.photoAuthor}
+                alt=""
+              />
             </div>
             <div className="tweet">
               <div className="tweet-header">
                 <div className="tweet-data">
                   <p
                     className="tweet-author"
-                    style={{
-                      backgroundColor: `${
-                        user.uid === tweet.uid ? userColor.hex : "#800FFF"
-                      }`,
-                    }}
+                    style={{ backgroundColor: `${userColor.hex}` }}
                   >
-                    {user.uid === tweet.uid ? userNick : tweet.nickname}
+                    {tweet.nickname}
                   </p>
                   &nbsp;
                   <p className="tweet-date">- 5 jun.</p>
                 </div>
-                {user && user.uid === tweet.uid && (
-                  <img
-                    src={images("./deleteIcon.svg").default}
-                    onClick={() => tweetsHelper.delete(tweet.id)}
-                    className="delete-icon like-item"
-                    alt="Borrar Tweet"
-                  />
-                )}
+                <img
+                  src={images("./deleteIcon.svg").default}
+                  onClick={() => tweetsHelper.deleteTweet(tweet.id)}
+                  className="delete-icon like-item"
+                  alt="Borrar Tweet"
+                />
               </div>
               <div className="tweet-message">
                 <p className="font-style-tweet">{tweet.tweet}</p>
@@ -94,6 +79,6 @@ export default function DevUnitedFeed({
             </div>
           </div>
         ))}
-    </div>
+    </>
   );
 }

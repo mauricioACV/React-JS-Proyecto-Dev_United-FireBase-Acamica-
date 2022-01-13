@@ -1,10 +1,10 @@
-import { firestore } from "../firebase";
+import { firestore } from "../../firebase";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 export default function UserProfileForeing({user}) {
-  const images = require.context("../imgs", true);
+  const images = require.context("../../imgs", true);
   const params = useParams();
   const { usernickname } = params;
 

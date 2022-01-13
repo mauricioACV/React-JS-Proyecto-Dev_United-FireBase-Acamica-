@@ -1,9 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { logout } from "../firebase";
+import { logout } from "../../firebase";
 
 export default function UserProfileHeader({ setUserNick, setUserColor, userNick }) {
-  const images = require.context("../imgs", true);
+  const images = require.context("../../imgs", true);
   const handleLogout = () => {
     setUserNick(null);
     setUserColor({});

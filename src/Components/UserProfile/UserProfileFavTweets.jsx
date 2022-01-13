@@ -1,20 +1,34 @@
 import { useEffect, useState } from "react";
-import { firestore } from "../firebase";
+import { firestore } from "../../firebase";
+import { handleLikeTweet } from '../../Handlers/tweetsHandlers';
 
-export default function UserProfileTweets({ user, userColor, tweets }) {
-  const images = require.context("../imgs", true);
+export default function UserProfileFavTweets({
+  user,
+  tweets,
+  userNick,
+  userColor,
+}) {
+  const images = require.context("../../imgs", true);
 
   const [favTweets, setFavTweets] = useState(null);
-  const [userTweets, setUserTweets] = useState([]);
+  const [userFavTweets, setUserFavTweets] = useState([]);
 
   const deleteTweet = (id) => {
     firestore.doc(`tweets/${id}`).delete();
   };
 
   useEffect(() => {
-    const userTweetsFilter = tweets.filter((tweet) => user.uid === tweet.uid);
-    setUserTweets(userTweetsFilter);
-  }, [tweets]);
+    const filterFavTweets = (favIds) => {
+      let favFilter = [];
+      favIds?.forEach((idFavTweet) => {
+        tweets.forEach((tweet) => {
+          if (tweet.id === idFavTweet) favFilter.push(tweet);
+        });
+      });
+      setFavTweets(favFilter);
+    };
+    filterFavTweets(userFavTweets);
+  }, [tweets, userFavTweets]);
 
   useEffect(() => {
     const getFavTweets = async (userEmail) => {
@@ -26,22 +40,20 @@ export default function UserProfileTweets({ user, userColor, tweets }) {
           if (!doc.exists) return null;
           if (doc.data().fav) return doc.data().fav;
         });
-      setFavTweets(tweetsFav);
+      setUserFavTweets(tweetsFav);
     };
     getFavTweets(user.email);
   }, [user]);
 
-  const isFavTweet = (tweetId) => {
-    if (favTweets) {
-      return favTweets.includes(tweetId);
-    }
-    return false;
+  const likeTweet = (tweetId, likes = 0) => {
+    const newFavTweets = handleLikeTweet(user.email, userFavTweets, tweetId, likes);
+    setUserFavTweets(newFavTweets);
   };
 
   return (
     <>
       {user &&
-        userTweets.map((tweet) => (
+        favTweets?.map((tweet) => (
           <div key={tweet.id} className="tweet-container">
             <div className="user-profile-photo">
               <img
@@ -55,19 +67,25 @@ export default function UserProfileTweets({ user, userColor, tweets }) {
                 <div className="tweet-data">
                   <p
                     className="tweet-author"
-                    style={{ backgroundColor: `${userColor.hex}` }}
+                    style={{
+                      backgroundColor: `${
+                        user.uid === tweet.uid ? userColor.hex : "#800FFF"
+                      }`,
+                    }}
                   >
-                    {tweet.nickname}
+                    {user.uid === tweet.uid ? userNick : tweet.nickname}
                   </p>
                   &nbsp;
                   <p className="tweet-date">- 5 jun.</p>
                 </div>
-                <img
-                  src={images("./deleteIcon.svg").default}
-                  onClick={() => deleteTweet(tweet.id)}
-                  className="delete-icon like-item"
-                  alt="Borrar Tweet"
-                />
+                {user && user.uid === tweet.uid && (
+                  <img
+                    src={images("./deleteIcon.svg").default}
+                    onClick={() => deleteTweet(tweet.id)}
+                    className="delete-icon like-item"
+                    alt="Borrar Tweet"
+                  />
+                )}
               </div>
               <div className="tweet-message">
                 <p className="font-style-tweet">{tweet.tweet}</p>
@@ -75,10 +93,8 @@ export default function UserProfileTweets({ user, userColor, tweets }) {
               <div className="buttons-tweets-container">
                 <div className="likes-container">
                   <img
-                    src={
-                      images(`./corazon${isFavTweet(tweet.id) ? "" : "_"}.svg`)
-                        .default
-                    }
+                    src={images("./corazon.svg").default}
+                    onClick={() => likeTweet(tweet.id, tweet.likes)}
                     className="like-icon like-item"
                     alt=""
                   />
