@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { firestore } from "../../firebase";
-import { handleLikeTweet } from '../../Handlers/tweetsHandlers';
+import { handleLikeTweet, handleDelete } from "../../Handlers/tweetsHandlers";
+import Spinner from "../Common/Spinner";
 
 export default function UserProfileFavTweets({
   user,
@@ -12,10 +13,11 @@ export default function UserProfileFavTweets({
 
   const [favTweets, setFavTweets] = useState(null);
   const [userFavTweets, setUserFavTweets] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const deleteTweet = (id) => {
-    firestore.doc(`tweets/${id}`).delete();
-  };
+  // const deleteTweet = (id) => {
+  //   firestore.doc(`tweets/${id}`).delete();
+  // };
 
   useEffect(() => {
     const filterFavTweets = (favIds) => {
@@ -26,6 +28,9 @@ export default function UserProfileFavTweets({
         });
       });
       setFavTweets(favFilter);
+      setTimeout(() => {
+        setLoading(false);        
+      }, 200);
     };
     filterFavTweets(userFavTweets);
   }, [tweets, userFavTweets]);
@@ -46,13 +51,20 @@ export default function UserProfileFavTweets({
   }, [user]);
 
   const likeTweet = (tweetId, likes = 0) => {
-    const newFavTweets = handleLikeTweet(user.email, userFavTweets, tweetId, likes);
+    const newFavTweets = handleLikeTweet(
+      user.email,
+      userFavTweets,
+      tweetId,
+      likes
+    );
     setUserFavTweets(newFavTweets);
   };
 
   return (
     <>
-      {user &&
+      {loading ? (
+        <Spinner />
+      ) : (
         favTweets?.map((tweet) => (
           <div key={tweet.id} className="tweet-container">
             <div className="user-profile-photo">
@@ -81,7 +93,7 @@ export default function UserProfileFavTweets({
                 {user && user.uid === tweet.uid && (
                   <img
                     src={images("./deleteIcon.svg").default}
-                    onClick={() => deleteTweet(tweet.id)}
+                    onClick={() => handleDelete(tweet.id)}
                     className="delete-icon like-item"
                     alt="Borrar Tweet"
                   />
@@ -103,7 +115,8 @@ export default function UserProfileFavTweets({
               </div>
             </div>
           </div>
-        ))}
+        ))
+      )}
     </>
   );
 }

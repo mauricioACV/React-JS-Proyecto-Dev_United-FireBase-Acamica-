@@ -1,9 +1,15 @@
 import { useEffect, useState } from "react";
-import { handleLikeTweet } from "../../Handlers/tweetsHandlers";
+import { handleLikeTweet, handleDelete } from "../../Handlers/tweetsHandlers";
 import tweetsHelper from "../../Helpers/tweetsHelpers";
 import userHelpers from "../../Helpers/userHelpers";
+import Spinner from "../Common/Spinner";
 
-export default function UserProfileTweets({ user, userColor, tweets }) {
+export default function UserProfileTweets({
+  user,
+  userColor,
+  tweets,
+  loading,
+}) {
   const images = require.context("../../imgs", true);
 
   const [favTweets, setFavTweets] = useState(null);
@@ -27,7 +33,9 @@ export default function UserProfileTweets({ user, userColor, tweets }) {
 
   return (
     <>
-      {user &&
+      {loading ? (
+        <Spinner />
+      ) : (
         userTweets.map((tweet) => (
           <div key={tweet.id} className="tweet-container">
             <div className="user-profile-photo">
@@ -51,7 +59,7 @@ export default function UserProfileTweets({ user, userColor, tweets }) {
                 </div>
                 <img
                   src={images("./deleteIcon.svg").default}
-                  onClick={() => tweetsHelper.deleteTweet(tweet.id)}
+                  onClick={() => handleDelete(tweet.id)}
                   className="delete-icon like-item"
                   alt="Borrar Tweet"
                 />
@@ -78,7 +86,8 @@ export default function UserProfileTweets({ user, userColor, tweets }) {
               </div>
             </div>
           </div>
-        ))}
+        ))
+      )}
     </>
   );
 }

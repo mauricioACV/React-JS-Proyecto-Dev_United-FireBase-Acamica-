@@ -9,6 +9,7 @@ export default function DevUnitedFormTweet({ user, userNick }) {
     uid: "",
     email: "",
     photoAuthor: "",
+    date: null,
   });
 
   const handleChange = (e) => {
@@ -19,6 +20,7 @@ export default function DevUnitedFormTweet({ user, userNick }) {
       autor: user.displayName,
       nickname: userNick,
       photoAuthor: user.photoURL,
+      date: new Date()
     };
     setTweet(nuevoTweet);
   };
@@ -33,6 +35,7 @@ export default function DevUnitedFormTweet({ user, userNick }) {
         uid: "",
         email: "",
         photoAuthor: "",
+        date: null,
       });
     } else {
       console.log('tweet vacío');

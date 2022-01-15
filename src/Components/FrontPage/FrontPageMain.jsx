@@ -6,6 +6,7 @@ import FrontPageWelcome from "./FrontPageWelcome";
 export default function FrontPageMain({
   user,
   setUserNick,
+  loading,
   setUserColor,
   userColor,
 }) {
@@ -15,6 +16,7 @@ export default function FrontPageMain({
       {user ? (
         <FrontPageWelcome
           user={user}
+          loading={loading}
           setUserNick={setUserNick}
           setUserColor={setUserColor}
           userColor={userColor}

@@ -11,7 +11,7 @@ export default function UserProfileFeed({ user, userColor, userNick, favActive }
       {favActive ? (
         <UserProfileFavTweets user={user} tweets={tweets} userColor={userColor} userNick={userNick} />
       ) : (
-        <UserProfileTweets user={user} userColor={userColor} tweets={tweets} />
+        <UserProfileTweets user={user} userColor={userColor} tweets={tweets} loading={loading} />
       )}
     </div>
   );

@@ -7,9 +7,9 @@ export default function FrontPageLogin() {
   return (
     <div className="login-container">
       <div className="login-container_info">
-        <h1 className="login-title">LOREM IPSUM DOLOR</h1>
+        <h1 className="login-title">DEVELOPERS SOCIAL NETWORK</h1>
         <h2 className="login-subtitle">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit
+          Comunidad para desarrolladores, comparte tus experiencias!
         </h2>
         <img
           src={images("./login-google.svg").default}

@@ -1,9 +1,10 @@
 import { useEffect } from "react";
 import { useTweets } from "../../Hooks/useTweets";
 import { Link } from "react-router-dom";
-import { handleLikeTweet } from "../../Handlers/tweetsHandlers";
+import { handleLikeTweet, handleDelete } from "../../Handlers/tweetsHandlers";
 import tweetsHelper from "../../Helpers/tweetsHelpers";
 import userHelpers from "../../Helpers/userHelpers";
+import Spinner from "../Common/Spinner";
 
 export default function DevUnitedFeed({
   user,
@@ -15,7 +16,6 @@ export default function DevUnitedFeed({
   const images = require.context("../../imgs", true);
 
   const { tweets, loading } = useTweets(user);
-  
 
   useEffect(() => {
     tweetsHelper.getFav(user.email).then((data) => {
@@ -30,7 +30,9 @@ export default function DevUnitedFeed({
 
   return (
     <div className="tweets-app">
-      {user &&
+      {loading ? (
+        <Spinner />
+      ) : (
         tweets.map((tweet) => (
           <div key={tweet.id} className="tweet-container">
             <div className="user-profile-photo">
@@ -65,7 +67,7 @@ export default function DevUnitedFeed({
                 {user && user.uid === tweet.uid && (
                   <img
                     src={images("./deleteIcon.svg").default}
-                    onClick={() => tweetsHelper.delete(tweet.id)}
+                    onClick={() => handleDelete(tweet.id)}
                     className="delete-icon like-item"
                     alt="Borrar Tweet"
                   />
@@ -93,7 +95,8 @@ export default function DevUnitedFeed({
               </div>
             </div>
           </div>
-        ))}
+        ))
+      )}
     </div>
   );
 }

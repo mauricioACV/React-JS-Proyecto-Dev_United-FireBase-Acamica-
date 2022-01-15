@@ -1,14 +1,19 @@
 import React, { useState } from "react";
 import { firestore } from "../../firebase";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import Spinner from "../Common/Spinner";
 import ColorPicker from "./ColorPicker";
 import FrontPageFooter from "./FrontPageFooter";
 
 export default function FrontPageWelcome({
   user,
+  loading,
   setUserNick,
   setUserColor,
   userColor,
 }) {
+  console.log(loading);
   const [userNickname, setUserNickname] = useState("");
 
   const handleChange = (e) => {
@@ -59,38 +64,50 @@ export default function FrontPageWelcome({
       });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (nickname) => {
     const isValidNickename = await checkNickname(userNickname, user.email);
     if (isValidNickename) {
       saveUserNickname(user.email, userNickname, userColor);
       setUserNick(userNickname);
     } else {
+      const MySwal = withReactContent(Swal);
+      MySwal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `Nickname ${nickname} no esta disponible :(`,
+        color: '#fff',
+        background: '#150714',
+      });
       return;
     }
   };
   return (
     <div className="login-container">
-      <div className="login-container-welcome_info">
-        <h1 className="login-title">WELCOME</h1>
-        <h2 className="login-title login-user-name">{user.displayName}</h2>
-        <p className="login-margin">{user.email}</p>
-        <input
-          className="login-input-name login-margin"
-          type="text"
-          value={userNickname}
-          onChange={handleChange}
-          placeholder="Type your username"
-        />
-        <p className="login-margin">Select your favorite color</p>
-        <ColorPicker setUserColor={setUserColor} userColor={userColor} />
-        <button
-          className="login-btn-continue login-margin"
-          onClick={handleSubmit}
-        >
-          CONTINUE
-        </button>
-        <FrontPageFooter />
-      </div>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div className="login-container-welcome_info">
+          <h1 className="login-title">WELCOME</h1>
+          <h2 className="login-title login-user-name">{user.displayName}</h2>
+          <p className="login-margin">{user.email}</p>
+          <input
+            className="login-input-name login-margin"
+            type="text"
+            value={userNickname}
+            onChange={handleChange}
+            placeholder="Type your username"
+          />
+          <p className="login-margin">Select your favorite color</p>
+          <ColorPicker setUserColor={setUserColor} userColor={userColor} />
+          <button
+            className="login-btn-continue login-margin"
+            onClick={()=>handleSubmit(userNickname)}
+          >
+            CONTINUE
+          </button>
+          <FrontPageFooter />
+        </div>
+      )}
     </div>
   );
 }
