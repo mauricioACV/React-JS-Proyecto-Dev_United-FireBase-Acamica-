@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { firestore } from "../../firebase";
 import { handleLikeTweet, handleDelete } from "../../Handlers/tweetsHandlers";
+import tweetsHelper from "../../Helpers/tweetsHelpers";
 import Spinner from "../Common/Spinner";
 
 export default function UserProfileFavTweets({
@@ -14,10 +15,14 @@ export default function UserProfileFavTweets({
   const [favTweets, setFavTweets] = useState(null);
   const [userFavTweets, setUserFavTweets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [sortTweets, setSortTweets] = useState([]);
 
-  // const deleteTweet = (id) => {
-  //   firestore.doc(`tweets/${id}`).delete();
-  // };
+  useEffect(() => {
+    if (favTweets) {
+      const sortTweetsByDate = tweetsHelper.sortTweetsByDate(favTweets);
+      setSortTweets(sortTweetsByDate);
+    }
+  }, [favTweets]);
 
   useEffect(() => {
     const filterFavTweets = (favIds) => {
@@ -29,7 +34,7 @@ export default function UserProfileFavTweets({
       });
       setFavTweets(favFilter);
       setTimeout(() => {
-        setLoading(false);        
+        setLoading(false);
       }, 200);
     };
     filterFavTweets(userFavTweets);
@@ -65,7 +70,7 @@ export default function UserProfileFavTweets({
       {loading ? (
         <Spinner />
       ) : (
-        favTweets?.map((tweet) => (
+        sortTweets?.map((tweet) => (
           <div key={tweet.id} className="tweet-container">
             <div className="user-profile-photo">
               <img
@@ -77,18 +82,35 @@ export default function UserProfileFavTweets({
             <div className="tweet">
               <div className="tweet-header">
                 <div className="tweet-data">
+                  <div className="tweet-autor-date">
+                    <p
+                      className="tweet-author"
+                      style={{
+                        backgroundColor: `${
+                          user.uid === tweet.uid ? userColor.hex : "#800FFF"
+                        }`,
+                      }}
+                    >
+                      {user.uid === tweet.uid ? userNick : tweet.nickname}
+                    </p>
+                    &nbsp;
+                    <p className="tweet-date">
+                      -{" "}
+                      {tweetsHelper.tUnixToStringDate(
+                        new Date(tweet.date.toDate()).getTime()
+                      )}
+                    </p>
+                  </div>
                   <p
-                    className="tweet-author"
+                    className="tweet-email"
                     style={{
-                      backgroundColor: `${
-                        user.uid === tweet.uid ? userColor.hex : "#800FFF"
+                      color: `${
+                        user.uid === tweet.uid ? userColor.hex : "#E033FF"
                       }`,
                     }}
                   >
-                    {user.uid === tweet.uid ? userNick : tweet.nickname}
+                    {tweet.email}
                   </p>
-                  &nbsp;
-                  <p className="tweet-date">- 5 jun.</p>
                 </div>
                 {user && user.uid === tweet.uid && (
                   <img

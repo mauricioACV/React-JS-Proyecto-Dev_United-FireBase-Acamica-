@@ -15,6 +15,15 @@ export default function UserProfileTweets({
   const [favTweets, setFavTweets] = useState(null);
   const [userTweets, setUserTweets] = useState([]);
 
+  const [sortTweets, setSortTweets] = useState([]);
+
+  useEffect(() => {
+    if (userTweets) {
+      const sortTweetsByDate = tweetsHelper.sortTweetsByDate(userTweets);
+      setSortTweets(sortTweetsByDate);
+    }
+  }, [userTweets]);
+
   useEffect(() => {
     const userTweetsFilter = tweets.filter((tweet) => user.uid === tweet.uid);
     setUserTweets(userTweetsFilter);
@@ -36,7 +45,7 @@ export default function UserProfileTweets({
       {loading ? (
         <Spinner />
       ) : (
-        userTweets.map((tweet) => (
+        sortTweets.map((tweet) => (
           <div key={tweet.id} className="tweet-container">
             <div className="user-profile-photo">
               <img
@@ -48,14 +57,29 @@ export default function UserProfileTweets({
             <div className="tweet">
               <div className="tweet-header">
                 <div className="tweet-data">
+                  <div className="tweet-autor-date">
+                    <p
+                      className="tweet-author"
+                      style={{ backgroundColor: `${userColor.hex}` }}
+                    >
+                      {tweet.nickname}
+                    </p>
+                    &nbsp;
+                    <p className="tweet-date">
+                      -{" "}
+                      {tweetsHelper.tUnixToStringDate(
+                        new Date(tweet.date.toDate()).getTime()
+                      )}
+                    </p>
+                  </div>
                   <p
-                    className="tweet-author"
-                    style={{ backgroundColor: `${userColor.hex}` }}
+                    className="tweet-email"
+                    style={{
+                      color: `${userColor.hex}`,
+                    }}
                   >
-                    {tweet.nickname}
+                    {tweet.email}
                   </p>
-                  &nbsp;
-                  <p className="tweet-date">- 5 jun.</p>
                 </div>
                 <img
                   src={images("./deleteIcon.svg").default}

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { firestore } from "../../firebase";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 export default function DevUnitedFormTweet({ user, userNick }) {
   const [tweet, setTweet] = useState({
@@ -38,7 +40,14 @@ export default function DevUnitedFormTweet({ user, userNick }) {
         date: null,
       });
     } else {
-      console.log('tweet vacío');
+      const MySwal = withReactContent(Swal);
+      MySwal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Escriba un post para publicar!',
+        color: "#fff",
+        background: "#150714",
+      })
     }
   };
 
@@ -48,7 +57,7 @@ export default function DevUnitedFormTweet({ user, userNick }) {
         <div className="form-header">
           <div className="user-profile-photo">
             <Link to="/UserProfile">
-              <img className="profile-pic-tweet" src={user.photoURL} alt="" />
+              <img className="profile-pic-tweet" src={user.photoURL.toString()} alt="user avatar" />
             </Link>
           </div>
           <div className="new-tweet-container">
@@ -60,10 +69,11 @@ export default function DevUnitedFormTweet({ user, userNick }) {
               name="tweet"
               maxLength="200"
             ></textarea>
+            <div className="tweet-progress-text" style={{ width: `${ tweet.tweet.length/2.06 }%` }} ></div>
             <div className="autor-button">
               <div className="tweet-indicator">
-                <p className="rest-char">7</p>
-                <p className="max-char">200 max.</p>
+                <p className="rest-char">{tweet.tweet.length}</p>
+                <p className="max-char">{200 - tweet.tweet.length} max.</p>
               </div>
               <button className="send-tweet" onClick={sendTweet}>
                 Post

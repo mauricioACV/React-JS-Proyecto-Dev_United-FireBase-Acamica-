@@ -1,5 +1,5 @@
 import React from "react";
-import {colorOptions} from '../../Entities/FrontPage'
+import {colorOptions} from '../../Enums/FrontPage'
 
 export default function ColorPicker({ userColor, setUserColor }) {
 

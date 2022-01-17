@@ -1,4 +1,5 @@
 import { firestore } from "../firebase";
+import { diasSemana, meses } from "../Enums/agnoCalendario";
 
 const tweetsHelper = {
   like: function (userEmail, favTweets, tweetId, likes = 0) {
@@ -28,6 +29,20 @@ const tweetsHelper = {
         if (doc.data().fav) return doc.data().fav;
       });
     return tweetsFav;
+  },
+  tUnixToStringDate: function (tUnix) {
+    const fechaOrigen = new Date(tUnix);
+    const stringFechaLengNatural =
+      fechaOrigen.getDate() +
+      " " +
+      meses[fechaOrigen.getMonth()] +
+      " " +
+      fechaOrigen.getFullYear();
+
+    return stringFechaLengNatural;
+  },
+  sortTweetsByDate: function (tweets) {
+    return tweets.sort((a, b) => b.date.toDate() - a.date.toDate());
   },
 };
 

@@ -9,8 +9,8 @@ export default function DevUnitedHeader({ user }) {
       <Link to="/UserProfile">
         <img
           className="user-profile-pic"
-          src={user.photoURL}
-          alt=""
+          src={user.photoURL.toString()}
+          alt="user avatar"
         />
       </Link>
       <img

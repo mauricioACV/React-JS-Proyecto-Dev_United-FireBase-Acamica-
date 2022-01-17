@@ -2,8 +2,10 @@ import { firestore } from "../../firebase";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import AccessDenied from "../AccessDenied";
+import Spinner from "../Common/Spinner";
 
-export default function UserProfileForeing({user}) {
+export default function UserProfileForeing({ user }) {
   const images = require.context("../../imgs", true);
   const params = useParams();
   const { usernickname } = params;
@@ -14,6 +16,8 @@ export default function UserProfileForeing({user}) {
   const [tweets, setTweets] = useState([]);
   const [userTweets, setUserTweets] = useState([]);
   const [favTweets, setFavTweets] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [loadingTweet, setLoadingTweet] = useState(true);
 
   const getUserDetails = async (email) => {
     if (email) {
@@ -49,6 +53,7 @@ export default function UserProfileForeing({user}) {
         }
       });
     setValidNickanme(response);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -64,6 +69,9 @@ export default function UserProfileForeing({user}) {
       (tweet) => foreingUserEmail === tweet.email
     );
     setUserTweets(userTweetsFilter);
+    setTimeout(() => {
+      setLoadingTweet(false);
+    }, 1000);
   }, [tweets, foreingUserEmail]);
 
   useEffect(() => {
@@ -113,7 +121,11 @@ export default function UserProfileForeing({user}) {
     return false;
   };
 
-  return validNickname && (
+  return loading ? (
+    <div className="foreing-user-spinner-container">
+      <Spinner />
+    </div>
+  ) : validNickname ? (
     <div className="dev-united-app">
       <div className="user-profile">
         <Link to="/">
@@ -144,48 +156,55 @@ export default function UserProfileForeing({user}) {
         </div>
       </div>
       <div className="tweets-app">
-        {userTweets?.map((tweet) => (
-          <div key={tweet.id} className="tweet-container">
-            <div className="user-profile-photo">
-              <img
-                className="profile-pic-tweet"
-                src={tweet.photoAuthor}
-                alt=""
-              />
-            </div>
-            <div className="tweet">
-              <div className="tweet-header">
-                <div className="tweet-data">
-                  <p
-                    className="tweet-author"
-                    style={{ backgroundColor: `${userDetails?.color.hex}` }}
-                  >
-                    {tweet.nickname}
-                  </p>
-                  &nbsp;
-                  <p className="tweet-date">- 5 jun.</p>
+        {loadingTweet ? (
+          <Spinner />
+        ) : (
+          userTweets?.map((tweet) => (
+            <div key={tweet.id} className="tweet-container">
+              <div className="user-profile-photo">
+                <img
+                  className="profile-pic-tweet"
+                  src={tweet.photoAuthor}
+                  alt=""
+                />
+              </div>
+              <div className="tweet">
+                <div className="tweet-header">
+                  <div className="tweet-data">
+                    <p
+                      className="tweet-author"
+                      style={{ backgroundColor: `${userDetails?.color.hex}` }}
+                    >
+                      {tweet.nickname}
+                    </p>
+                    &nbsp;
+                    <p className="tweet-date">- 5 jun.</p>
+                  </div>
+                </div>
+                <div className="tweet-message">
+                  <p className="font-style-tweet">{tweet.tweet}</p>
+                </div>
+                <div className="buttons-tweets-container">
+                  <div className="likes-container">
+                    <img
+                      src={
+                        images(
+                          `./corazon${isFavTweet(tweet.id) ? "" : "_"}.svg`
+                        ).default
+                      }
+                      className="like-icon like-item"
+                      alt=""
+                    />
+                    <p className="like-count">{tweet.likes || ""}</p>
+                  </div>
                 </div>
               </div>
-              <div className="tweet-message">
-                <p className="font-style-tweet">{tweet.tweet}</p>
-              </div>
-              <div className="buttons-tweets-container">
-                <div className="likes-container">
-                  <img
-                    src={
-                      images(`./corazon${isFavTweet(tweet.id) ? "" : "_"}.svg`)
-                        .default
-                    }
-                    className="like-icon like-item"
-                    alt=""
-                  />
-                  <p className="like-count">{tweet.likes || ""}</p>
-                </div>
-              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
+  ) : (
+    <AccessDenied />
   );
 }

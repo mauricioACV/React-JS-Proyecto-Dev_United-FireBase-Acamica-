@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTweets } from "../../Hooks/useTweets";
 import { Link } from "react-router-dom";
 import { handleLikeTweet, handleDelete } from "../../Handlers/tweetsHandlers";
@@ -14,8 +14,15 @@ export default function DevUnitedFeed({
   userColor,
 }) {
   const images = require.context("../../imgs", true);
-
   const { tweets, loading } = useTweets(user);
+  const [sortTweets, setSortTweets] = useState([]);
+
+  useEffect(() => {
+    if (tweets) {
+      const sortTweetsByDate = tweetsHelper.sortTweetsByDate(tweets);
+      setSortTweets(sortTweetsByDate);
+    }
+  }, [tweets]);
 
   useEffect(() => {
     tweetsHelper.getFav(user.email).then((data) => {
@@ -33,7 +40,7 @@ export default function DevUnitedFeed({
       {loading ? (
         <Spinner />
       ) : (
-        tweets.map((tweet) => (
+        sortTweets.map((tweet) => (
           <div key={tweet.id} className="tweet-container">
             <div className="user-profile-photo">
               <Link
@@ -44,25 +51,42 @@ export default function DevUnitedFeed({
                 <img
                   className="profile-pic-tweet"
                   src={tweet.photoAuthor}
-                  alt=""
+                  alt="user avatar"
                 />
               </Link>
             </div>
             <div className="tweet">
               <div className="tweet-header">
                 <div className="tweet-data">
+                  <div className="tweet-autor-date">
+                    <p
+                      className="tweet-author"
+                      style={{
+                        backgroundColor: `${
+                          user.uid === tweet.uid ? userColor.hex : "#E033FF"
+                        }`,
+                      }}
+                    >
+                      {user.uid === tweet.uid ? userNick : tweet.nickname}
+                    </p>
+                    &nbsp;
+                    <p className="tweet-date">
+                      -{" "}
+                      {tweetsHelper.tUnixToStringDate(
+                        new Date(tweet.date.toDate()).getTime()
+                      )}
+                    </p>
+                  </div>
                   <p
-                    className="tweet-author"
+                    className="tweet-email"
                     style={{
-                      backgroundColor: `${
+                      color: `${
                         user.uid === tweet.uid ? userColor.hex : "#800FFF"
                       }`,
                     }}
                   >
-                    {user.uid === tweet.uid ? userNick : tweet.nickname}
+                    {tweet.email}
                   </p>
-                  &nbsp;
-                  <p className="tweet-date">- 5 jun.</p>
                 </div>
                 {user && user.uid === tweet.uid && (
                   <img

@@ -22,6 +22,7 @@ export const useTweets = (user) => {
                 email: doc.data().email,
                 uid: doc.data().uid,
                 photoAuthor: doc.data().photoAuthor,
+                date: doc.data().date,
               };
             });
             setState({

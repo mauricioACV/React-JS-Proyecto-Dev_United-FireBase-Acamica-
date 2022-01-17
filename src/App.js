@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { AppContext } from "./Context/ContextProvider.js";
 import { auth } from "./firebase";
 import { Route, Switch } from "react-router-dom";
-import userHelpers from './Helpers/userHelpers'
+import userHelpers from "./Helpers/userHelpers";
 import DevUnitedApp from "./Components/DevUnitedApp/DevUnitedApp";
 import FrontPageMain from "./Components/FrontPage/FrontPageMain";
 import UserProfile from "./Components/UserProfile/UserProfile";
@@ -17,22 +17,30 @@ function App() {
   const [userColor, setUserColor] = useState({});
   const [loading, setLoading] = useState(true);
 
-  const handleUserAuthState = (user=null) => {
-    setUser(user);
+  useEffect(() => {
     if (user !== null) {
-      userHelpers.getUserNickname(user.email).then(nickname=>setUserNick(nickname));
-      userHelpers.getUserColor(user.email).then(color=>setUserColor(color));
+      userHelpers
+        .getUserNickname(user.email)
+        .then((nickname) => setUserNick(nickname));
+      userHelpers.getUserColor(user.email).then((color) => setUserColor(color));
       userHelpers.saveUserPhoto(user.email, user.photoURL);
       setTimeout(() => {
-        setLoading(false);        
-      }, 1000);
+        setLoading(false);
+      }, 1500);
+      return;
     }
     setFavTweets([]);
-    setLoading(true);        
-  };
+    setLoading(true);
+  }, [user]);
 
   useEffect(() => {
-    auth.onAuthStateChanged(handleUserAuthState);
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
   }, [user]);
 
   return (
@@ -85,13 +93,7 @@ function App() {
           exact
           path="/:usernickname"
           render={() => {
-            return user ? (
-              <UserProfileForeing
-                user={user}
-              />
-            ) : (
-              <AccessDenied />
-            );
+            return user ? <UserProfileForeing user={user} /> : <AccessDenied />;
           }}
         />
       </Switch>
