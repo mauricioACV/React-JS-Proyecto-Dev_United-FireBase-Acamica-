@@ -13,7 +13,7 @@ export default function UserProfile({
 
   const [favActive, setFavActive] = useState(false);
   return (
-    <div className="dev-united-app">
+    <div className="dev-united-app animate__animated animate__fadeIn">
       <UserProfileHeader
         userNick={userNick}
         setUserNick={setUserNick}

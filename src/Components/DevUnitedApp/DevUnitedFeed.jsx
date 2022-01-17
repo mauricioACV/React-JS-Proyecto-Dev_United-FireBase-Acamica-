@@ -36,7 +36,7 @@ export default function DevUnitedFeed({
   };
 
   return (
-    <div className="tweets-app">
+    <div className="tweets-app animate__animated animate__fadeIn">
       {loading ? (
         <Spinner />
       ) : (

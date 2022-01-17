@@ -5,7 +5,7 @@ export default function DevUnitedHeader({ user }) {
   const images = require.context("../../imgs", true);
 
   return (
-    <div className="user-profile">
+    <div className="user-profile animate__animated animate__fadeIn">
       <Link to="/UserProfile">
         <img
           className="user-profile-pic"

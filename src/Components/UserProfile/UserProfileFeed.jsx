@@ -7,7 +7,7 @@ export default function UserProfileFeed({ user, userColor, userNick, favActive }
   const {tweets, loading} = useTweets(user);
 
   return (
-    <div className="tweets-app">
+    <div className="tweets-app animate__animated animate__fadeIn">
       {favActive ? (
         <UserProfileFavTweets user={user} tweets={tweets} userColor={userColor} userNick={userNick} />
       ) : (

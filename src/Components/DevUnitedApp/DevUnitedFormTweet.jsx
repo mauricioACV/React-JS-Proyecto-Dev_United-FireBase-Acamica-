@@ -52,7 +52,7 @@ export default function DevUnitedFormTweet({ user, userNick }) {
   };
 
   return (
-    <form className="App-form-container">
+    <form className="App-form-container animate__animated animate__fadeIn">
       <div className="form-container">
         <div className="form-header">
           <div className="user-profile-photo">

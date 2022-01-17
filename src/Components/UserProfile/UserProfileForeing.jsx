@@ -126,7 +126,7 @@ export default function UserProfileForeing({ user }) {
       <Spinner />
     </div>
   ) : validNickname ? (
-    <div className="dev-united-app">
+    <div className="dev-united-app animate__animated animate__fadeIn">
       <div className="user-profile">
         <Link to="/">
           <div className="user-profile-back">

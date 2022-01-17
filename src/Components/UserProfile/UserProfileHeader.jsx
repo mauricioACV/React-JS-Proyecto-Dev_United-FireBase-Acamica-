@@ -5,8 +5,8 @@ import { logout } from "../../firebase";
 export default function UserProfileHeader({ setUserNick, setUserColor, userNick }) {
   const images = require.context("../../imgs", true);
   const handleLogout = () => {
-    setUserNick(null);
     setUserColor({});
+    setUserNick(null);
     logout();
   };
 

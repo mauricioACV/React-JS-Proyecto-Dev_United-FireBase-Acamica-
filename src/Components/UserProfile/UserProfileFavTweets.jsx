@@ -71,7 +71,7 @@ export default function UserProfileFavTweets({
         <Spinner />
       ) : (
         sortTweets?.map((tweet) => (
-          <div key={tweet.id} className="tweet-container">
+          <div key={tweet.id} className="tweet-container animate__animated animate__fadeIn">
             <div className="user-profile-photo">
               <img
                 className="profile-pic-tweet"
