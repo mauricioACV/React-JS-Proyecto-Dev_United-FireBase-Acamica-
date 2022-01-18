@@ -11,7 +11,7 @@ const tweetsHelper = {
     firestore.doc(`tweets/${tweetId}`).update({ likes: likes + 1 });
     return [tweetId];
   },
-  dislike: function (favTweets, tweetId, likes = 0) {
+  dislike: function (userEmail, favTweets, tweetId, likes = 0) {
     const favFilter = favTweets.filter((item) => item !== tweetId);
     firestore.doc(`tweets/${tweetId}`).update({ likes: likes - 1 });
     return favFilter;

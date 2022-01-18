@@ -388,13 +388,14 @@ overflow: hidden;
 }
 
 .user-profile-back {
-  width: 130px;
+  width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 }
 
 .user-profile-name {
+  margin-left: 8px;
   font-family: Silkscreen;
   font-style: normal;
   font-weight: bold;
@@ -407,7 +408,6 @@ overflow: hidden;
 .user-profile-dashboard-photo {
   width: 135px;
   border-radius: 50%;
-  /* outline: 5px solid yellow; */
 }
 
 .user-profile-dashboard-name {

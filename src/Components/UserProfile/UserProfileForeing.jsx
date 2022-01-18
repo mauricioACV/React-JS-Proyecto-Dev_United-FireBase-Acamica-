@@ -2,6 +2,9 @@ import { firestore } from "../../firebase";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { handleLikeTweet } from "../../Handlers/tweetsHandlers";
+import userHelpers from "../../Helpers/userHelpers";
+import tweetsHelper from "../../Helpers/tweetsHelpers";
 import AccessDenied from "../AccessDenied";
 import Spinner from "../Common/Spinner";
 
@@ -18,6 +21,14 @@ export default function UserProfileForeing({ user }) {
   const [favTweets, setFavTweets] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadingTweet, setLoadingTweet] = useState(true);
+  const [sortTweets, setSortTweets] = useState([]);
+
+  useEffect(() => {
+    if (userTweets) {
+      const sortTweetsByDate = tweetsHelper.sortTweetsByDate(userTweets);
+      setSortTweets(sortTweetsByDate);
+    }
+  }, [userTweets]);
 
   const getUserDetails = async (email) => {
     if (email) {
@@ -89,6 +100,7 @@ export default function UserProfileForeing({ user }) {
               email: doc.data().email,
               uid: doc.data().uid,
               photoAuthor: doc.data().photoAuthor,
+              date: doc.data().date,
             };
           });
           setTweets(tweets);
@@ -114,11 +126,9 @@ export default function UserProfileForeing({ user }) {
     }
   }, [foreingUserEmail, user]);
 
-  const isFavTweet = (tweetId) => {
-    if (favTweets) {
-      return favTweets.includes(tweetId);
-    }
-    return false;
+  const likeTweet = (tweetId, likes = 0) => {
+    const newFavTweets = handleLikeTweet(user.email, favTweets, tweetId, likes);
+    setFavTweets(newFavTweets);
   };
 
   return loading ? (
@@ -159,7 +169,7 @@ export default function UserProfileForeing({ user }) {
         {loadingTweet ? (
           <Spinner />
         ) : (
-          userTweets?.map((tweet) => (
+          sortTweets?.map((tweet) => (
             <div key={tweet.id} className="tweet-container">
               <div className="user-profile-photo">
                 <img
@@ -171,14 +181,21 @@ export default function UserProfileForeing({ user }) {
               <div className="tweet">
                 <div className="tweet-header">
                   <div className="tweet-data">
-                    <p
-                      className="tweet-author"
-                      style={{ backgroundColor: `${userDetails?.color.hex}` }}
-                    >
-                      {tweet.nickname}
-                    </p>
-                    &nbsp;
-                    <p className="tweet-date">- 5 jun.</p>
+                    <div className="tweet-autor-date">
+                      <p
+                        className="tweet-author"
+                        style={{ backgroundColor: `${userDetails?.color.hex}` }}
+                      >
+                        {tweet.nickname}
+                      </p>
+                      &nbsp;
+                      <p className="tweet-date">
+                        -{" "}
+                        {tweetsHelper.tUnixToStringDate(
+                          new Date(tweet.date.toDate()).getTime()
+                        )}
+                      </p>
+                    </div>
                   </div>
                 </div>
                 <div className="tweet-message">
@@ -187,13 +204,16 @@ export default function UserProfileForeing({ user }) {
                 <div className="buttons-tweets-container">
                   <div className="likes-container">
                     <img
-                      src={
-                        images(
-                          `./corazon${isFavTweet(tweet.id) ? "" : "_"}.svg`
-                        ).default
-                      }
-                      className="like-icon like-item"
-                      alt=""
+                        src={
+                          images(
+                            `./corazon${
+                              userHelpers.isFavTweet(favTweets, tweet.id) ? "" : "_"
+                            }.svg`
+                          ).default
+                        }
+                        onClick={() => likeTweet(tweet.id, tweet.likes)}
+                        className="like-icon like-item"
+                        alt="like icon"
                     />
                     <p className="like-count">{tweet.likes || ""}</p>
                   </div>

@@ -94,6 +94,7 @@ export default function FrontPageWelcome({
       return;
     }
   };
+  
   return (
     <div className="login-container">
       {loading ? (
@@ -113,7 +114,7 @@ export default function FrontPageWelcome({
           <p className="login-margin">Select your favorite color</p>
           <ColorPicker setUserColor={setUserColor} userColor={userColor} />
           <button
-            className="login-btn-continue login-margin"
+            className="login-btn-continue"
             onClick={()=>handleSubmit(userNickname)}
           >
             CONTINUE

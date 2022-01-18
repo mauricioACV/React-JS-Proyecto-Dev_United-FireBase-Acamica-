@@ -14,7 +14,6 @@ export default function UserProfileTweets({
 
   const [favTweets, setFavTweets] = useState(null);
   const [userTweets, setUserTweets] = useState([]);
-
   const [sortTweets, setSortTweets] = useState([]);
 
   useEffect(() => {

@@ -29,7 +29,7 @@ export const handleLikeTweet = (
       return newFavTweets;
     }
   } else {
-    const newFavTweets = tweetsHelper.firstLikeEver(userEmail, tweetId, likes);
+    const newFavTweets = tweetsHelper.firstLikeEver(tweetId, likes);
     userHelpers.updateFavTweets(userEmail, newFavTweets);
     return newFavTweets;
   }

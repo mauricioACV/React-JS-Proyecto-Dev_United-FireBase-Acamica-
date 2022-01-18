@@ -31,7 +31,6 @@ export default function DevUnitedFeed({
   }, [user]);
 
   const likeTweet = (tweetId, likes = 0) => {
-    // console.log(favTweets);
     const newFavTweets = handleLikeTweet(user.email, favTweets, tweetId, likes);
     setFavTweets(newFavTweets);
   };
@@ -113,7 +112,7 @@ export default function DevUnitedFeed({
                     }
                     onClick={() => likeTweet(tweet.id, tweet.likes)}
                     className="like-icon like-item"
-                    alt=""
+                    alt="like icon"
                   />
                   <p className="like-count">{tweet.likes || ""}</p>
                 </div>
