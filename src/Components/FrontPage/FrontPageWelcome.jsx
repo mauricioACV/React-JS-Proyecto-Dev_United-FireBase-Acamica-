@@ -13,7 +13,6 @@ export default function FrontPageWelcome({
   setUserColor,
   userColor,
 }) {
-  console.log(loading);
   const [userNickname, setUserNickname] = useState("");
 
   const handleChange = (e) => {
@@ -65,7 +64,21 @@ export default function FrontPageWelcome({
   };
 
   const handleSubmit = async (nickname) => {
+    
+    if (!userNickname || userColor.hex === undefined) {
+      const MySwal = withReactContent(Swal);
+      MySwal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: `Debe escribir un nickname y escoger un color favorito`,
+        color: '#fff',
+        background: '#150714',
+      });
+      return;
+    }
+
     const isValidNickename = await checkNickname(userNickname, user.email);
+
     if (isValidNickename) {
       saveUserNickname(user.email, userNickname, userColor);
       setUserNick(userNickname);

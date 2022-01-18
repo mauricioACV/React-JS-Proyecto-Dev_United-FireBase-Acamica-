@@ -21,7 +21,6 @@ export const handleLikeTweet = (
       return newFavTweets;
     } else {
       const newFavTweets = tweetsHelper.like(
-        userEmail,
         favTweets,
         tweetId,
         likes

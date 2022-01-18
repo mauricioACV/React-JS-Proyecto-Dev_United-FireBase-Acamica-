@@ -1,17 +1,17 @@
 import { firestore } from "../firebase";
-import { diasSemana, meses } from "../Enums/agnoCalendario";
+import { meses } from "../Enums/agnoCalendario";
 
 const tweetsHelper = {
-  like: function (userEmail, favTweets, tweetId, likes = 0) {
+  like: function (favTweets, tweetId, likes) {
     const newFavTweets = [...favTweets, tweetId];
     firestore.doc(`tweets/${tweetId}`).update({ likes: likes + 1 });
     return newFavTweets;
   },
-  firstLikeEver: function (userEmail, tweetId, likes = 0) {
+  firstLikeEver: function (tweetId, likes = 0) {
     firestore.doc(`tweets/${tweetId}`).update({ likes: likes + 1 });
     return [tweetId];
   },
-  dislike: function (userEmail, favTweets, tweetId, likes = 0) {
+  dislike: function (favTweets, tweetId, likes = 0) {
     const favFilter = favTweets.filter((item) => item !== tweetId);
     firestore.doc(`tweets/${tweetId}`).update({ likes: likes - 1 });
     return favFilter;

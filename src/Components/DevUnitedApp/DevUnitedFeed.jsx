@@ -31,6 +31,7 @@ export default function DevUnitedFeed({
   }, [user]);
 
   const likeTweet = (tweetId, likes = 0) => {
+    // console.log(favTweets);
     const newFavTweets = handleLikeTweet(user.email, favTweets, tweetId, likes);
     setFavTweets(newFavTweets);
   };

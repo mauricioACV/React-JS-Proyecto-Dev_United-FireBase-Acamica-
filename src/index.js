@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom/cjs/react-router-dom.min";
 import ContextProvider from "./Context/ContextProvider.js";
 import App from "./App";
 import "./App.css";
+import "./AppResponsive.css";
 import 'animate.css';
 import "./Spinner.css";
 

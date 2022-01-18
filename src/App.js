@@ -10,9 +10,8 @@ import UserProfileForeing from "./Components/UserProfile/UserProfileForeing.jsx"
 import AccessDenied from "./Components/AccessDenied.jsx";
 
 function App() {
-  const { userNick, setUserNick } = useContext(AppContext);
+  const { user, setUser, userNick, setUserNick } = useContext(AppContext);
 
-  const [user, setUser] = useState(null);
   const [favTweets, setFavTweets] = useState([]);
   const [userColor, setUserColor] = useState({});
   const [loading, setLoading] = useState(true);
@@ -29,8 +28,8 @@ function App() {
       }, 1500);
       return;
     }
-    setFavTweets([]);
     setLoading(true);
+    setFavTweets([]);
   }, [user]);
 
   useEffect(() => {

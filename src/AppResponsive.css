@@ -1,0 +1,138 @@
+
+@media screen and (max-width: 450px) {
+    .front-page-container {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .logo-container, .login-container {
+        width: 100%;
+        height: 50%;
+    }
+    
+    .logo-container img {
+        margin: 20px 0px;
+        width: 70%;
+    }
+
+    .login-container {
+        text-align: center;
+    }
+
+    .login-container-welcome_info {
+        max-width: 90%;
+    }
+
+    .login-title {
+        font-size: 28px;
+    }
+
+    .login-margin {
+        margin: 10px 0px 20px 0px;
+    }
+
+    .login-user-name {
+        line-height: 20px;
+        font-size: 22px;
+    }
+    
+    .login-subtitle {
+        font-size: 14px;
+    }
+
+    .login-input-name {
+        height: 47px;
+        width: 100%;
+        padding:7px
+    }
+
+    .login-input-name::placeholder {
+        text-align: center;
+    }
+
+    .login-footer {
+        margin-top: 20px;
+    }
+      
+    .login-copyright {
+        font-size: 14px;
+        color: #60265B;
+    }
+    .login-version-app {
+        font-size: 14px;
+    }
+
+    .color-picker {
+        width: 100%;
+    }
+
+    .color {
+        width: 30px;
+        height: 30px;
+    }
+
+    .login-btn-continue {
+        height: 67px;
+        width: 100%;
+        margin-top: 30px;
+    }
+
+    .user-profile {
+        padding: 0px 10px;
+    }
+
+    .user-profile .user-profile-pic {
+        width: 43px;
+    }
+
+    .logo_small {
+        margin-left: 60px;
+    }
+
+    .dev_united_logo {
+        width: 110px;
+    }
+
+    .form-container {
+        width: 100%;
+    }
+
+    .profile-pic-tweet {
+        margin-left: 7px;
+        width: 37px;
+        height: 37px;
+    }
+
+    .tweet {
+        margin: 0px 10px 10px 10px;
+    }
+
+    .tweet-text {
+        width: 300px;
+        height: 120px;
+    }
+
+    .new-tweet-container {
+        padding-right: 10px;
+    }
+
+    .tweets-app {
+        width: 100%;
+    }
+
+    .tweet-container{
+        margin-top: 10px;
+        margin-left: 8px;
+        width: 100%;
+    }
+
+    .font-style-tweet {
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    .tweet-author, .tweet-date {
+        padding: 1px 3px;
+        font-size: 15px;
+    }
+  }
