@@ -1,15 +1,11 @@
-import React from "react";
+import { useContext } from "react";
+import { AppContext } from "../../Context/ContextProvider";
 import FrontPageLogin from "./FrontPageLogin";
 import FrontPageLogo from "./FrontPageLogo";
 import FrontPageWelcome from "./FrontPageWelcome";
 
-export default function FrontPageMain({
-  user,
-  setUserNick,
-  loading,
-  setUserColor,
-  userColor,
-}) {
+export default function FrontPageMain() {
+  const { user, setUserNick, loading, userColor, setUserColor } = useContext(AppContext);
   return (
     <div className="front-page-container">
       <FrontPageLogo />

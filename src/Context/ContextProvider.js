@@ -5,6 +5,9 @@ export const AppContext = React.createContext();
 export default function ContextProvider({ children }) {
   const [userNick, setUserNick] = useState(null);
   const [user, setUser] = useState(null);
+  const [favTweets, setFavTweets] = useState([]);
+  const [userColor, setUserColor] = useState({});
+  const [loading, setLoading] = useState(true);
 
   return (
     <AppContext.Provider
@@ -13,6 +16,12 @@ export default function ContextProvider({ children }) {
         setUser,
         userNick,
         setUserNick,
+        favTweets,
+        setFavTweets,
+        userColor,
+        setUserColor,
+        loading,
+        setLoading,
       }}
     >
       {children}

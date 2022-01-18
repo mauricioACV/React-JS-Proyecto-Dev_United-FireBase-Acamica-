@@ -1,16 +1,11 @@
-import React, { useState } from "react";
+import { useState, useContext } from "react";
+import { AppContext } from "../../Context/ContextProvider";
 import UserProfileDashboard from "./UserProfileDashboard";
 import UserProfileFeed from "./UserProfileFeed";
 import UserProfileHeader from "./UserProfileHeader";
 
-export default function UserProfile({
-  user,
-  userNick,
-  setUserNick,
-  setUserColor,
-  userColor,
-}) {
-
+export default function UserProfile() {
+  const { user, userNick, setUserNick, userColor, setUserColor } = useContext(AppContext);
   const [favActive, setFavActive] = useState(false);
   return (
     <div className="dev-united-app animate__animated animate__fadeIn">

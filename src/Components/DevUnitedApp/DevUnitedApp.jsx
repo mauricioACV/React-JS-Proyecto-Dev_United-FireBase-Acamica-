@@ -1,23 +1,14 @@
-import React from "react";
-
+import { useContext } from "react";
+import { AppContext } from "../../Context/ContextProvider";
 import DevUnitedHeader from "./DevUnitedHeader";
 import DevUnitedFormTweet from "./DevUnitedFormTweet";
 import DevUnitedFeed from "./DevUnitedFeed";
 
-export default function DevUnitedApp({
-  user,
-  favTweets,
-  setFavTweets,
-  userNick,
-  setUserNick,
-  setUserColor,
-  userColor,
-}) {
+export default function DevUnitedApp() {
+  const { user, userNick, favTweets, setFavTweets, userColor } = useContext(AppContext);
   return (
     <div className="dev-united-app">
-      <DevUnitedHeader
-        user={user}
-      />
+      <DevUnitedHeader user={user} />
       <DevUnitedFormTweet user={user} userNick={userNick} />
       <DevUnitedFeed
         user={user}

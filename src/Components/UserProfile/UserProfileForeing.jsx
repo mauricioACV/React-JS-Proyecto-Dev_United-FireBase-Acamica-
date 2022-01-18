@@ -1,15 +1,17 @@
 import { firestore } from "../../firebase";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { AppContext } from "../../Context/ContextProvider";
 import { handleLikeTweet } from "../../Handlers/tweetsHandlers";
 import userHelpers from "../../Helpers/userHelpers";
 import tweetsHelper from "../../Helpers/tweetsHelpers";
 import AccessDenied from "../AccessDenied";
 import Spinner from "../Common/Spinner";
 
-export default function UserProfileForeing({ user }) {
+export default function UserProfileForeing() {
   const images = require.context("../../imgs", true);
+  const { user } = useContext(AppContext);
   const params = useParams();
   const { usernickname } = params;
 

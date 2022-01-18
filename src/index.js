@@ -6,7 +6,6 @@ import App from "./App";
 import "./App.css";
 import "./AppResponsive.css";
 import 'animate.css';
-import "./Spinner.css";
 
 ReactDOM.render(
   <ContextProvider>

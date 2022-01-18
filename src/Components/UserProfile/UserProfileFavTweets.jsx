@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { firestore } from "../../firebase";
 import { handleLikeTweet, handleDelete } from "../../Handlers/tweetsHandlers";
 import tweetsHelper from "../../Helpers/tweetsHelpers";
@@ -71,13 +72,22 @@ export default function UserProfileFavTweets({
         <Spinner />
       ) : (
         sortTweets?.map((tweet) => (
-          <div key={tweet.id} className="tweet-container animate__animated animate__fadeIn">
+          <div
+            key={tweet.id}
+            className="tweet-container animate__animated animate__fadeIn"
+          >
             <div className="user-profile-photo">
-              <img
-                className="profile-pic-tweet"
-                src={tweet.photoAuthor}
-                alt=""
-              />
+              <Link
+                to={`${
+                  user.uid === tweet.uid ? "/UserProfile" : "/" + tweet.nickname
+                }`}
+              >
+                <img
+                  className="profile-pic-tweet"
+                  src={tweet.photoAuthor}
+                  alt="user avatar"
+                />
+              </Link>
             </div>
             <div className="tweet">
               <div className="tweet-header">

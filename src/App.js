@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useContext } from "react";
 import { AppContext } from "./Context/ContextProvider.js";
 import { auth } from "./firebase";
 import { Route, Switch } from "react-router-dom";
@@ -10,11 +10,15 @@ import UserProfileForeing from "./Components/UserProfile/UserProfileForeing.jsx"
 import AccessDenied from "./Components/AccessDenied.jsx";
 
 function App() {
-  const { user, setUser, userNick, setUserNick } = useContext(AppContext);
-
-  const [favTweets, setFavTweets] = useState([]);
-  const [userColor, setUserColor] = useState({});
-  const [loading, setLoading] = useState(true);
+  const {
+    user,
+    setUser,
+    userNick,
+    setUserNick,
+    setFavTweets,
+    setUserColor,
+    setLoading,
+  } = useContext(AppContext);
 
   useEffect(() => {
     if (user !== null) {
@@ -49,50 +53,21 @@ function App() {
           exact
           path="/"
           render={() => {
-            return user && userNick ? (
-              <DevUnitedApp
-                user={user}
-                favTweets={favTweets}
-                setFavTweets={setFavTweets}
-                setUserNick={setUserNick}
-                userNick={userNick}
-                setUserColor={setUserColor}
-                userColor={userColor}
-              />
-            ) : (
-              <FrontPageMain
-                loading={loading}
-                user={user}
-                userNick={userNick}
-                setUserNick={setUserNick}
-                setUserColor={setUserColor}
-                userColor={userColor}
-              />
-            );
+            return user && userNick ? <DevUnitedApp /> : <FrontPageMain />;
           }}
         />
         <Route
           exact
           path="/UserProfile/"
           render={() => {
-            return user && userNick ? (
-              <UserProfile
-                user={user}
-                userNick={userNick}
-                setUserNick={setUserNick}
-                setUserColor={setUserColor}
-                userColor={userColor}
-              />
-            ) : (
-              <AccessDenied />
-            );
+            return user && userNick ? <UserProfile /> : <AccessDenied />;
           }}
         />
         <Route
           exact
           path="/:usernickname"
           render={() => {
-            return user ? <UserProfileForeing user={user} /> : <AccessDenied />;
+            return user ? <UserProfileForeing /> : <AccessDenied />;
           }}
         />
       </Switch>
