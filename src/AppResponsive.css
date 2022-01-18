@@ -118,6 +118,10 @@
         margin: 0px 10px 10px 10px;
     }
 
+    .tweet-email {
+        font-size: 12px;
+    }
+
     .tweet-text {
         width: 300px;
         height: 120px;
