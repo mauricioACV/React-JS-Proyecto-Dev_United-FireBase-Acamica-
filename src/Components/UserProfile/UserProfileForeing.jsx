@@ -198,6 +198,14 @@ export default function UserProfileForeing() {
                         )}
                       </p>
                     </div>
+                    <p
+                      className="tweet-email"
+                      style={{
+                        color: `${userDetails?.color.hex}`,
+                      }}
+                    >
+                      {tweet.email}
+                    </p>
                   </div>
                 </div>
                 <div className="tweet-message">
@@ -206,16 +214,18 @@ export default function UserProfileForeing() {
                 <div className="buttons-tweets-container">
                   <div className="likes-container">
                     <img
-                        src={
-                          images(
-                            `./corazon${
-                              userHelpers.isFavTweet(favTweets, tweet.id) ? "" : "_"
-                            }.svg`
-                          ).default
-                        }
-                        onClick={() => likeTweet(tweet.id, tweet.likes)}
-                        className="like-icon like-item"
-                        alt="like icon"
+                      src={
+                        images(
+                          `./corazon${
+                            userHelpers.isFavTweet(favTweets, tweet.id)
+                              ? ""
+                              : "_"
+                          }.svg`
+                        ).default
+                      }
+                      onClick={() => likeTweet(tweet.id, tweet.likes)}
+                      className="like-icon like-item"
+                      alt="like icon"
                     />
                     <p className="like-count">{tweet.likes || ""}</p>
                   </div>
