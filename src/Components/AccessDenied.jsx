@@ -11,7 +11,9 @@ export default function AccessDenied() {
         src={images("./not-found.svg").default}
         alt="not found"
       />
-      <Link to="/">Lo sentimos :( esta operación no es válida!</Link>
+      <Link to="/">
+        <p className="denied-message">Lo sentimos :( esta operación no es válida!</p>
+      </Link>
       <Link to="/">
         <div className="back-home-container">
           <img
