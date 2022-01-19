@@ -5,7 +5,7 @@ import UserProfileFeed from "./UserProfileFeed";
 import UserProfileHeader from "./UserProfileHeader";
 
 export default function UserProfile() {
-  const { user, userNick, setUserNick, userColor, setUserColor } = useContext(AppContext);
+  const { user, setUser, userNick, setUserNick, userColor, setUserColor } = useContext(AppContext);
   const [favActive, setFavActive] = useState(false);
   return (
     <div className="dev-united-app animate__animated animate__fadeIn">
@@ -13,6 +13,7 @@ export default function UserProfile() {
         userNick={userNick}
         setUserNick={setUserNick}
         setUserColor={setUserColor}
+        setUser={setUser}
       />
       <UserProfileDashboard user={user} userNick={userNick} userColor={userColor} favActive={favActive} setFavActive={setFavActive} />
       <UserProfileFeed user={user} userColor={userColor} favActive={favActive} userNick={userNick} />
