@@ -29,7 +29,7 @@ function App() {
       userHelpers.saveUserPhoto(user.email, user.photoURL);
       setTimeout(() => {
         setLoading(false);
-      }, 1500);
+      }, 2000);
       return;
     }
     setLoading(true);

@@ -3,7 +3,12 @@ import "firebase/firestore";
 import "firebase/auth";
 
 const firebaseConfig = {
-
+  apiKey: "AIzaSyCnbPEt3pUQsXjTDE_SgjUkOxoCh9TAk-0",
+  authDomain: "dev-united-mcampusano.firebaseapp.com",
+  projectId: "dev-united-mcampusano",
+  storageBucket: "dev-united-mcampusano.appspot.com",
+  messagingSenderId: "111420615089",
+  appId: "1:111420615089:web:3cc5129beafdbe46f8b590"
 };
 
 // Initialize Firebase
